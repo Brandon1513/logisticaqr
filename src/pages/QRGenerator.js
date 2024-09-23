@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { QRCodeCanvas } from 'qrcode.react'; 
 import '../assets/styles/QRGenerator.css'; 
 
 function QRForm() {
@@ -6,8 +7,11 @@ function QRForm() {
         nombre: '',
         noSerie: '',
         tipo: '',
-        ubicacion: ''
+        ubicacion: '',
+        propietario: ''
     });
+    const [qrData, setQrData] = useState('');
+    const qrRef = useRef(); // Usamos useRef para acceder al canvas del QR
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -16,8 +20,36 @@ function QRForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        const qrString = `
+            Nombre: ${formData.nombre}\n
+            No. de Serie: ${formData.noSerie}\n
+            Tipo: ${formData.tipo}\n
+            Ubicación: ${formData.ubicacion}\n
+            ${formData.tipo === 'equipo-computo' ? `Propietario: ${formData.propietario}\n` : ''}
+        `;
+
+        setQrData(qrString.trim());
         console.log(formData);
-        
+    };
+
+    const handleClear = () => {
+        setFormData({
+            nombre: '',
+            noSerie: '',
+            tipo: '',
+            ubicacion: '',
+            propietario: ''
+        });
+        setQrData('');
+    };
+
+    const handleExport = () => {
+        const canvas = qrRef.current.querySelector('canvas'); 
+        const pngUrl = canvas.toDataURL('image/png'); 
+        const downloadLink = document.createElement('a'); 
+        downloadLink.href = pngUrl;
+        downloadLink.download = `codigoQR_${formData.nombre || 'qr'}.png`; 
+        downloadLink.click(); 
     };
 
     return (
@@ -63,6 +95,21 @@ function QRForm() {
                         <option value="herramienta">Herramienta</option>
                     </select>
                 </div>
+
+                {formData.tipo === 'equipo-computo' && (
+                    <div className="input-group">
+                        <label htmlFor="propietario">Nombre del Propietario:</label>
+                        <input
+                            type="text"
+                            id="propietario"
+                            name="propietario"
+                            value={formData.propietario}
+                            onChange={handleChange}
+                            required={formData.tipo === 'equipo-computo'}
+                        />
+                    </div>
+                )}
+
                 <div className="input-group">
                     <label htmlFor="ubicacion">Ubicación:</label>
                     <select
@@ -79,8 +126,23 @@ function QRForm() {
                         <option value="oficinas">Oficinas</option>
                     </select>
                 </div>
-                <button type="submit" className="submit-button">Generar QR</button>
+                <div className="button-group">
+                    <button type="submit" className="submit-button">Generar QR</button>
+                    <button type="button" className="clear-button" onClick={handleClear}>Limpiar Formulario</button>
+                </div>
             </form>
+
+            {qrData && (
+                <div className="qr-code-container">
+                    <h3>Código QR generado:</h3>
+                    <div ref={qrRef}> 
+                        <QRCodeCanvas value={qrData} size={256} />
+                    </div>
+                    <pre>{qrData}</pre>
+                    
+                    <button className="export-button" onClick={handleExport}>Exportar QR como PNG</button>
+                </div>
+            )}
         </div>
     );
 }
