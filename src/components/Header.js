@@ -12,13 +12,16 @@ function Header() {
             </div>
             <ul className="nav-list">
                 <li>
-                    <Link to="/">Inicio</Link>
+                    <Link to="/Home">Inicio</Link>
                 </li>
                 <li>
                     <Link to="/qr-generator">Generador de QR</Link>
                 </li>
                 <li>
                     <Link to="/datatable">Consultas</Link>
+                </li>
+                <li>
+                    <Link to="/">Salir</Link>
                 </li>
             </ul>
         </nav>

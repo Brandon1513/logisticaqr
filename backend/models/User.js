@@ -1,0 +1,12 @@
+const { type } = require("@testing-library/user-event/dist/type");
+const mongoose = require("mongoose");
+
+const UserSchema = new mongoose.Schema({
+    username: {type: String, require: true},
+    email: {type: String, require: true, unique:true},
+    password: {type: String, require},
+    role: {type: String, require: true},
+    departamento: {type: String, require: true},
+});
+
+module.exports = mongoose.model("User", UserSchema);
