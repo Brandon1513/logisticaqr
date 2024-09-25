@@ -2,6 +2,7 @@ const express = require("express");
 const { check } = require("express-validator");
 const { registerUser, loginUser, getUserProfile, updateUserProfile } = require("../controllers/userController");
 const auth = require("../middleware/auth");
+const User = require("../models/User")
 
 const router = express.Router();
 
@@ -17,6 +18,17 @@ router.post(
   ],
   registerUser
 );
+
+
+
+router.get("/dataUser", async (req, res) => {
+    try {
+        const users = await User.find();
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: "Error al obtener los usuarios" });
+    }
+});
 
 // Ruta para login de usuario
 router.post(

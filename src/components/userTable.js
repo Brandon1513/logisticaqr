@@ -1,52 +1,39 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/styles/DataTable.css";
+import { API_BASE_URL } from "../config";
 
 function DataTable() {
-    // Datos simulados
-    const users = [
-        { 
-            name: "Brandon Javier Devora Lucio", 
-            email: "brandon.devora@dasavena.com", 
-            role: "Administrador", 
-            department: "TI" 
-        },
-        { 
-            name: "Omar Guadalupe Arellano", 
-            email: "omar@dasavena.com", 
-            role: "Empleado", 
-            department: "Ventas" 
-        },
-        { 
-            name: "Denisse Álvarez", 
-            email: "denisse@dasavena.com", 
-            role: "Empleado", 
-            department: "Marketing" 
-        },
-        { 
-            name: "Karen Apolinar", 
-            email: "karen.apolinar@dasavena.com", 
-            role: "Empleado", 
-            department: "Recursos Humanos" 
-        },
-        { 
-            name: "Lorena López", 
-            email: "rhumanos@dasavena.com", 
-            role: "Empleado", 
-            department: "Recursos Humanos" 
-        },
-        { 
-            name: "Hector Aguilera", 
-            email: "hector.aguilera@dasavena.com", 
-            role: "Empleado", 
-            department: "Logística" 
-        },
-        { 
-            name: "Sarai Gutierrez", 
-            email: "sarai.gutierrez@dasavena.com", 
-            role: "Empleado", 
-            department: "Finanzas" 
-        },
-    ];
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`${API_BASE_URL}/user/dataUser`);
+                if (!response.ok) {
+                    throw new Error("Error al obtener los usuarios");
+                }
+                const data = await response.json();
+                setUsers(data);
+            } catch (error) {
+                console.error("Error:", error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+    if (loading) {
+        return <p>Cargando usuarios...</p>;
+    }
+
+    if (error) {
+        return <p>Error: {error}</p>;
+    }
 
     return (
         <table className="user-table">
@@ -62,10 +49,10 @@ function DataTable() {
             <tbody>
                 {users.map((user, index) => (
                     <tr key={index}>
-                        <td>{user.name}</td>
+                        <td>{user.username}</td>
                         <td>{user.email}</td>
-                        <td>{user.role}</td>
-                        <td>{user.department}</td>
+                        <td>{user.rol}</td>
+                        <td>{user.departamento}</td>
                         <td>
                             <button className="edit-button">Editar</button>
                             <button className="delete-button">Eliminar</button>

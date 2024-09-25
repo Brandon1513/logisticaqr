@@ -95,8 +95,8 @@ function FormUser() {
                         value={formData.rol}
                         onChange={handleChange}
                     >
-                        <option value="Employee">Empleado</option>
-                        <option value="Admin">Administrador</option>
+                        <option value="Empleado">Empleado</option>
+                        <option value="Administrador">Administrador</option>
                     </select>
                 </div>
 
