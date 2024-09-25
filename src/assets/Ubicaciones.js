@@ -12,6 +12,20 @@ export const ubicaciones = [
   { value: "taller-mantenimiento", label: "Taller de Mantenimiento" },
 ];
 
+export const tipoActivo = [
+  { value: "edificios", label: "Edificios" },
+  { value: "equipo-computo", label: "Equipo de Computo" },
+  { value: "equipo-medico", label: "Equipo Médico" },
+  { value: "equipo-oficina", label: "Equipo de Oficina" },
+  { value: "herramientas", label: "Herramientas" },
+  { value: "instalaciones", label: "Instalaciones" },
+  { value: "maquinaria-industrial", label: "Maquinaria y Equipo Industrial" },
+  { value: "mobiliario", label: "Mobiliario" },
+  { value: "obras-infraestructura", label: "Obras de Infraestructura" },
+  { value: "transporte", label: "Transporte" }
+];
+
+
 export const produccion = [
   { value: "aduana", label: "Aduana" },
   { value: "envasado", label: "Envasado" },
@@ -38,14 +52,21 @@ export const oficinas = [
 ];
 
 
+
 //Mapeo de variables para mostrar en frontend
 export const tipoMap = {
+  "edificios": "Edificios",
   "equipo-computo": "Equipo de Cómputo",
-  "electrodomestico": "Electrodoméstico",
-  "muebles": "Muebles",
-  "maquinaria": "Maquinaria",
-  "herramienta": "Herramienta",
+  "equipo-medico": "Equipo Médico",
+  "equipo-oficina": "Equipo de Oficina",
+  "herramientas": "Herramientas",
+  "instalaciones": "Instalaciones",
+  "maquinaria-industrial": "Maquinaria y Equipo Industrial",
+  "mobiliario": "Mobiliario",
+  "obras-infraestructura": "Obras de Infraestructura",
+  "transporte": "Transporte"
 };
+
 
 export const ubicacionesMap = {
     "almacen": "Almacén",

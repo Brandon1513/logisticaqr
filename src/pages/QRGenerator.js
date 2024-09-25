@@ -13,6 +13,7 @@ import {
   almacenMap,
   sanitariosMap,
   oficinasMap,
+  tipoActivo,
 } from "../assets/Ubicaciones";
 
 function QRForm() {
@@ -195,15 +196,15 @@ function QRForm() {
             required
           >
             <option value="">Selecciona el tipo</option>
-            <option value="equipo-computo">Equipo de Cómputo</option>
-            <option value="electrodomestico">Electrodoméstico</option>
-            <option value="muebles">Muebles</option>
-            <option value="maquinaria">Maquinaria</option>
-            <option value="herramienta">Herramienta</option>
+            {tipoActivo.map((tipo) => (
+              <option key={tipo.value} value={tipo.value} >
+                {tipo.label}
+              </option>
+            ))}
           </select>
         </div>
 
-        {formData.tipo === "equipo-computo" && (
+        {(formData.tipo === "equipo-computo" || formData.tipo === "transporte") && (
           <div className="input-group">
             <label htmlFor="propietario">Nombre del Propietario:</label>
             <input
