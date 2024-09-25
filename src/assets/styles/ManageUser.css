@@ -1,0 +1,29 @@
+.manage-users {
+  padding: 20px;
+  margin-top: 100px;
+}
+
+.header-section {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.add-user-button {
+  background-color: #1a73e8;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.add-user-button:hover {
+  background-color: #155bb5;
+}
+
+.datatable-section {
+  margin-top: 20px;
+}

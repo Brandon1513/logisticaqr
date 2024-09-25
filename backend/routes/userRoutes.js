@@ -1,7 +1,7 @@
 const express = require("express");
 const { check } = require("express-validator");
 const { registerUser, loginUser, getUserProfile, updateUserProfile } = require("../controllers/userController");
-const auth = require("./authRoutes");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 
@@ -30,5 +30,8 @@ router.post(
 
 // Ruta para obtener perfil del usuario (protección con auth)
 router.get("/profile", auth, getUserProfile);
+
+// Ruta para actualizar perfil del usuario (protección con auth)
+router.put("/profile", auth, updateUserProfile);
 
 module.exports = router;
