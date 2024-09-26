@@ -85,10 +85,6 @@ router.put("/:id", async (req, res) => {
 
 
 
-
-
-
-
 // Ruta para login de usuario
 router.post(
   "/login",

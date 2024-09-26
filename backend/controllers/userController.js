@@ -66,17 +66,19 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
-    const payload = { id: user._id };
+    const payload = { id: user._id, rol: user.rol }; 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    res.json({ token });
+    res.json({ token, rol: user.rol }); 
   } catch (error) {
     console.error(error);
     res.status(500).send("Error del servidor");
   }
 };
+
+
 
 // Obtener perfil del usuario
 exports.getUserProfile = async (req, res) => {

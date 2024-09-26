@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Route,
@@ -16,18 +16,29 @@ import FormUser from "./pages/FormUser";
 
 function App() {
   const location = useLocation();
-  const [role, setRole] = useState("admin"); // o "employee", dependiendo de la lógica de autenticación
+  const [rol, setRole] = useState(null);
+
+  useEffect(() => {
+    const currentState = location.state;
+    if (currentState && currentState.rol) {
+      setRole(currentState.rol);
+    } else {
+      // También puedes cargar el rol de localStorage si no está en el estado
+      const storedRole = localStorage.getItem('rol');
+      setRole(storedRole);
+    }
+  }, [location]);
 
   return (
     <div className="App">
-      {location.pathname !== "/login" && <Header role={role} />}
+      {location.pathname !== "/login" && <Header rol={rol} />} {/* Pasa el rol aquí */}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/qr-generator" element={<QRGenerator />} />
         <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/profile" element={<Profile />} />
-        {role === "admin" && (
+        {rol === "Administrador" && (
           <Route path="/manage-users" element={<ManageUsers />} />
         )}
         <Route path="/create-user" element={<FormUser />} />
@@ -35,6 +46,7 @@ function App() {
     </div>
   );
 }
+
 
 function AppWrapper() {
   return (

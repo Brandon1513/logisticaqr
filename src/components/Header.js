@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import '../assets/styles/Header.css';
 import logo from '../assets/images/DasavenaLogo.png';
 
-const Header = ({ role }) => {
+const Header = ({ rol }) => { // Recibe el rol como prop
   return (
     <nav className="header">
       <div className="logo-container">
@@ -23,7 +23,7 @@ const Header = ({ role }) => {
         <li>
           <Link to="/profile">Perfil</Link>
         </li>
-        {role === "admin" && (
+        {rol === "Administrador" && ( // Utiliza el rol pasado como prop
           <li>
             <Link to="/manage-users">Gestionar Usuarios</Link>
           </li>

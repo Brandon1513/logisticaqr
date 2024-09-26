@@ -1,18 +1,42 @@
 import React, { useState } from 'react';
 import '../assets/styles/Login.css';
 import { useNavigate } from 'react-router-dom';
-
+import { API_BASE_URL } from '../config';
 
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
-        //e.preventDefault();
-        
-       navigate('/Home');
-        //console.log({ email, password });
+    const handleLogin = async (e) => {
+        e.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto del formulario
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/login`, { // Cambia esta URL según tu backend
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Guarda el token y el rol en el localStorage o contexto
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('rol', data.rol); // Asegúrate de que el rol está directamente en la respuesta
+
+                // Navega a la página principal o a la página correspondiente según el rol
+                navigate('/home'); // O según lo que necesites
+            } else {
+                // Manejar errores, como mostrar un mensaje de error
+                alert(data.message || 'Error al iniciar sesión');
+            }
+        } catch (error) {
+            console.error('Error en la petición de login:', error);
+            alert('Hubo un problema al conectar con el servidor. Inténtalo más tarde.');
+        }
     };
 
     return (
