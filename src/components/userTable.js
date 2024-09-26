@@ -9,7 +9,6 @@ function DataTable() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Cargar los usuarios al montar el componente
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -21,7 +20,7 @@ function DataTable() {
         setUsers(data);
       } catch (error) {
         console.error("Error:", error);
-        setError(error.message);
+        setError("No se pudieron cargar los usuarios. Intenta de nuevo más tarde.");
       } finally {
         setLoading(false);
       }
@@ -30,20 +29,21 @@ function DataTable() {
     fetchUsers();
   }, []);
 
-  // Función para eliminar un usuario
+  const token = localStorage.getItem("token");
+
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "¿Estás seguro de que deseas eliminar este usuario?"
-    );
+    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
     if (!confirmDelete) return;
 
     try {
       const response = await fetch(`${API_BASE_URL}/user/${id}`, {
         method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
-        // Eliminar el usuario del estado local
         setUsers(users.filter((user) => user._id !== id));
         alert("Usuario eliminado exitosamente");
       } else {
@@ -51,11 +51,10 @@ function DataTable() {
       }
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
-      alert("Error al eliminar el usuario");
+      alert("No se pudo eliminar el usuario. Intenta de nuevo más tarde.");
     }
   };
 
-  // Navegar a la página de edición de perfil
   const handleEdit = (user) => {
     navigate("/editProfile", { state: { user } });
   };
@@ -80,25 +79,28 @@ function DataTable() {
         </tr>
       </thead>
       <tbody>
-        {users.map((user) => (
-          <tr key={user._id}>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
-            <td>{user.rol}</td>
-            <td>{user.departamento}</td>
-            <td>
-              <button className="edit-button" onClick={() => handleEdit(user)}>
-                Editar
-              </button>
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(user._id)}
-              >
-                Eliminar
-              </button>
-            </td>
+        {users.length > 0 ? (
+          users.map((user) => (
+            <tr key={user._id}>
+              <td>{user.username}</td>
+              <td>{user.email}</td>
+              <td>{user.rol}</td>
+              <td>{user.departamento}</td>
+              <td>
+                <button className="edit-button" onClick={() => handleEdit(user)}>
+                  Editar
+                </button>
+                <button className="delete-button" onClick={() => handleDelete(user._id)}>
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td colSpan="5">No hay usuarios disponibles.</td>
           </tr>
-        ))}
+        )}
       </tbody>
     </table>
   );

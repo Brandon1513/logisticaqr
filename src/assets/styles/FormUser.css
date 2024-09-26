@@ -1,52 +1,79 @@
+/* Estilos generales para el formulario */
 .create-user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    width: 600px;
+    max-width: 1200px;
+    margin: 50px auto;
     padding: 20px;
-    margin-top: 100px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 130px;
 }
 
 .create-user h2 {
+    text-align: center;
     margin-bottom: 20px;
+    font-size: 24px;
+    color: #2a3443;
 }
 
-.create-user-form {
-    display: flex;
-    flex-direction: column;
-    width: 200%;
-    max-width: 800px;
-    gap: 15px;
+.create-user-form .form-group {
+    margin-bottom: 15px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-}
-
-.form-group label {
-    font-weight: bold;
+.create-user-form .form-group label {
+    display: block;
     margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
 }
 
-.form-group input,
-.form-group select {
+.create-user-form .form-group input,
+.create-user-form .form-group select {
+    width: 100%;
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
+.create-user-form .form-group input:focus,
+.create-user-form .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilos para el botón de enviar */
 .submit-button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: #2a3443;
+    color: #fff;
     font-size: 16px;
+    font-weight: bold;
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-    background-color: #45a049;
+    background-color: #374151;
+}
+
+@media (max-width: 768px) {
+    .create-user {
+        padding: 15px;
+    }
+
+    .create-user h2 {
+        font-size: 20px;
+    }
+
+    .submit-button {
+        font-size: 14px;
+    }
 }

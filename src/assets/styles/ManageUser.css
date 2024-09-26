@@ -10,7 +10,7 @@
 }
 
 .add-user-button {
-  background-color: #1a73e8;
+  background-color: #2a3443;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -21,7 +21,7 @@
 }
 
 .add-user-button:hover {
-  background-color: #155bb5;
+  background-color: #374151;
 }
 
 .datatable-section {

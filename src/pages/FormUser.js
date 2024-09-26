@@ -27,7 +27,7 @@ function FormUser() {
 
     if (!token) {
       alert("No tienes un token. Inicia sesión para continuar.");
-      return; // Si no hay token, salir de la función
+      return; 
     }
 
     try {
@@ -37,13 +37,13 @@ function FormUser() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(formData), // formData debería tener los datos correctos del formulario
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         console.log("Usuario creado exitosamente");
         alert("Usuario creado exitosamente");
-        navigate("/manage-users"); // Redirigir después de un registro exitoso
+        navigate("/manage-users"); 
       } else {
         const errorData = await response.json();
         console.error("Error al crear el usuario:", errorData);

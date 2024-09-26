@@ -119,7 +119,7 @@ function EditProfile() {
 
         <button
           type="submit"
-          className="submit-button"
+          className="submit-button-Update"
         >
           Actualizar Usuario
         </button>
