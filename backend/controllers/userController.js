@@ -3,6 +3,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
+// Función auxiliar para hashear contraseñas
+const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return await bcrypt.hash(password, salt);
+};
+
 // Registrar usuario
 exports.registerUser = async (req, res) => {
   const errors = validationResult(req);
@@ -18,8 +24,7 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: "El usuario ya existe" });
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await hashPassword(password);
 
     const newUser = new User({
       username,
@@ -37,9 +42,7 @@ exports.registerUser = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res
-      .status(201)
-      .json({ token, message: "Usuario registrado correctamente" });
+    res.status(201).json({ token, user: newUser }); // Incluir el nuevo usuario en la respuesta
   } catch (error) {
     console.error(error);
     res.status(500).send("Error del servidor");
@@ -78,12 +81,13 @@ exports.loginUser = async (req, res) => {
   }
 };
 
-
-
 // Obtener perfil del usuario
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
     res.json(user);
   } catch (error) {
     console.error(error);
@@ -106,15 +110,21 @@ exports.updateUserProfile = async (req, res) => {
     if (email) updates.email = email;
     if (rol) updates.rol = rol;
     if (departamento) updates.departamento = departamento;
+
+    // Si se proporciona una nueva contraseña, haz el hash
     if (password) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-      updates.password = hashedPassword;
+      updates.password = await hashPassword(password); // Usar la función auxiliar
     }
 
     const user = await User.findByIdAndUpdate(req.user.id, updates, {
       new: true,
-    }).select("-password");
+      runValidators: true,
+    }).select("-password"); // Excluye la contraseña del resultado
+
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
     res.json(user);
   } catch (error) {
     console.error(error);
@@ -122,4 +132,8 @@ exports.updateUserProfile = async (req, res) => {
   }
 };
 
-
+// Logout de usuario
+exports.logoutUser = (req, res) => {
+  // Aquí puedes invalidar el token en el cliente
+  res.json({ message: "Logout exitoso. El token debe ser eliminado en el cliente." });
+};

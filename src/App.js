@@ -4,6 +4,7 @@ import {
   Route,
   Routes,
   useLocation,
+  Navigate,
 } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
@@ -13,40 +14,61 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ManageUsers from "./pages/ManageUsers";
 import FormUser from "./pages/FormUser";
-
+import ConsultaActivos from "./pages/ConsultaActivo";
 function App() {
   const location = useLocation();
   const [rol, setRole] = useState(null);
+  const token = localStorage.getItem("token"); // Obtén el token
 
   useEffect(() => {
     const currentState = location.state;
     if (currentState && currentState.rol) {
       setRole(currentState.rol);
     } else {
-      // También puedes cargar el rol de localStorage si no está en el estado
-      const storedRole = localStorage.getItem('rol');
+      const storedRole = localStorage.getItem("rol");
       setRole(storedRole);
     }
   }, [location]);
 
   return (
     <div className="App">
-      {location.pathname !== "/login" && <Header rol={rol} />} {/* Pasa el rol aquí */}
+      {location.pathname !== "/" && <Header rol={rol} />} {/* Cambiado a "/" */}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/qr-generator" element={<QRGenerator />} />
-        <Route path="/editProfile" element={<EditProfile />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/" element={<Login />} /> {/* Ruta de login */}
+        <Route
+          path="/home"
+          element={token ? <Home /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/qr-generator"
+          element={token ? <QRGenerator /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/editProfile"
+          element={token ? <EditProfile /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/profile"
+          element={token ? <Profile /> : <Navigate to="/" replace />}
+        />
         {rol === "Administrador" && (
-          <Route path="/manage-users" element={<ManageUsers />} />
+          <Route
+            path="/manage-users"
+            element={token ? <ManageUsers /> : <Navigate to="/" replace />}
+          />
         )}
-        <Route path="/create-user" element={<FormUser />} />
+        <Route
+          path="/create-user"
+          element={token ? <FormUser /> : <Navigate to="/" replace />}
+        />
+        <Route
+          path="/datatable"
+          element={token ? <ConsultaActivos /> : <Navigate to="/" replace />}
+        />
       </Routes>
     </div>
   );
 }
-
 
 function AppWrapper() {
   return (

@@ -1,9 +1,17 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import '../assets/styles/Header.css';
-import logo from '../assets/images/DasavenaLogo.png';
+import { Link, useNavigate } from "react-router-dom"; // Importa useNavigate para la redirección
+import "../assets/styles/Header.css";
+import logo from "../assets/images/DasavenaLogo.png";
 
-const Header = ({ rol }) => { // Recibe el rol como prop
+const Header = ({ rol }) => {
+  const navigate = useNavigate(); // Inicializa useNavigate
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // Elimina el token
+    localStorage.removeItem("rol"); // Elimina el rol
+    navigate("/"); // Redirige al usuario a la página de inicio de sesión
+  };
+
   return (
     <nav className="header">
       <div className="logo-container">
@@ -23,13 +31,15 @@ const Header = ({ rol }) => { // Recibe el rol como prop
         <li>
           <Link to="/profile">Perfil</Link>
         </li>
-        {rol === "Administrador" && ( // Utiliza el rol pasado como prop
+        {rol === "Administrador" && (
           <li>
             <Link to="/manage-users">Gestionar Usuarios</Link>
           </li>
         )}
         <li>
-          <Link to="/login">Salir</Link>
+          <button onClick={handleLogout} className="logout-button">
+            Salir
+          </button>
         </li>
       </ul>
     </nav>

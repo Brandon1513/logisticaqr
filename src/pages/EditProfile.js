@@ -23,6 +23,8 @@ function EditProfile() {
     });
   };
 
+  const token = localStorage.getItem("token");
+
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
 
@@ -31,6 +33,7 @@ function EditProfile() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
