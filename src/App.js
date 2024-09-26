@@ -1,9 +1,14 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useLocation,
+} from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import QRGenerator from "./pages/QRGenerator";
-import Datatable from "./pages/Datatable";
+import EditProfile from "./pages/EditProfile";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import ManageUsers from "./pages/ManageUsers";
@@ -20,7 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/home" element={<Home />} />
         <Route path="/qr-generator" element={<QRGenerator />} />
-        <Route path="/datatable" element={<Datatable />} />
+        <Route path="/editProfile" element={<EditProfile />} />
         <Route path="/profile" element={<Profile />} />
         {role === "admin" && (
           <Route path="/manage-users" element={<ManageUsers />} />

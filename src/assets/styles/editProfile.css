@@ -1,0 +1,80 @@
+/* Estilos generales para el formulario */
+.edit-user {
+    width: 600px;
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 130px;
+}
+
+.edit-user h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.edit-user-form .form-group {
+    margin-bottom: 15px;
+}
+
+.edit-user-form .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+.edit-user-form .form-group input,
+.edit-user-form .form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.edit-user-form .form-group input:focus,
+.edit-user-form .form-group select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Estilos para el botón de enviar */
+.submit-button {
+    display: inline-block;
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background-color: #0056b3;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .edit-user {
+        padding: 15px;
+    }
+
+    .edit-user h2 {
+        font-size: 20px;
+    }
+
+    .submit-button {
+        font-size: 14px;
+    }
+}
