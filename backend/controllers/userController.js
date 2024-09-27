@@ -25,7 +25,6 @@ exports.registerUser = async (req, res) => {
     }
 
     const hashedPassword = await hashPassword(password);
-
     const newUser = new User({
       username,
       email,
@@ -69,12 +68,12 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Contraseña incorrecta" });
     }
 
-    const payload = { id: user._id, rol: user.rol }; 
+    const payload = { id: user._id, rol: user.rol, username: user.username };
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
 
-    res.json({ token, rol: user.rol }); 
+    res.json({ token, rol: user.rol });
   } catch (error) {
     console.error(error);
     res.status(500).send("Error del servidor");
@@ -96,44 +95,65 @@ exports.getUserProfile = async (req, res) => {
 };
 
 // Actualizar perfil del usuario
-exports.updateUserProfile = async (req, res) => {
+exports.updateProfile = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
+  const userId = req.user.id;
+  const { username, email, password, rol, departamento } = req.body;
+  const updates = {};
+
+  if (username) updates.username = username;
+  if (email) updates.email = email;
+  if (rol) updates.rol = rol;
+  if (departamento) updates.departamento = departamento;
+
+  // Si se proporciona una nueva contraseña, hashearla
+  if (password) {
+    updates.password = await hashPassword(password);
+  }
+
   try {
-    const { username, email, password, rol, departamento } = req.body;
-    const updates = {};
-
-    if (username) updates.username = username;
-    if (email) updates.email = email;
-    if (rol) updates.rol = rol;
-    if (departamento) updates.departamento = departamento;
-
-    // Si se proporciona una nueva contraseña, haz el hash
-    if (password) {
-      updates.password = await hashPassword(password); // Usar la función auxiliar
-    }
-
-    const user = await User.findByIdAndUpdate(req.user.id, updates, {
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
       new: true,
       runValidators: true,
-    }).select("-password"); // Excluye la contraseña del resultado
+    }).select("-password");
 
-    if (!user) {
+    if (!updatedUser) {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
-    res.json(user);
+    res.json({
+      message: "Perfil actualizado exitosamente",
+      user: updatedUser,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error del servidor");
+    console.error("Error al actualizar el perfil:", error);
+    if (error.name === "ValidationError") {
+      return res
+        .status(400)
+        .json({ message: "Error de validación", errors: error.errors });
+    }
+    res.status(500).json({ message: "Error al actualizar el perfil" });
+  }
+};
+
+// Obtener todos los usuarios
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: "Error al obtener usuarios" });
   }
 };
 
 // Logout de usuario
 exports.logoutUser = (req, res) => {
   // Aquí puedes invalidar el token en el cliente
-  res.json({ message: "Logout exitoso. El token debe ser eliminado en el cliente." });
+  res.json({
+    message: "Logout exitoso. El token debe ser eliminado en el cliente.",
+  });
 };

@@ -70,7 +70,7 @@ function EditProfile() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="email">Correo Electrónico *Opcional</label>
+          <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
             id="email"
@@ -82,7 +82,7 @@ function EditProfile() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="password">Contraseña</label>
+          <label htmlFor="password">Contraseña *Opcional</label>
           <input
             type="password"
             id="password"

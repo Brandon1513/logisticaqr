@@ -14,7 +14,7 @@ const Header = ({ rol }) => {
 
   return (
     <nav className="header">
-      <div className="logo-container">
+      <div className="logo-container"> 
         <img src={logo} className="logo" alt="Dasavena Logo" />
         <span className="logo-text">Dasavena</span>
       </div>
