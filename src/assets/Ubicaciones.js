@@ -2,7 +2,6 @@ export const ubicaciones = [
   { value: "almacen", label: "Almacén" },
   { value: "comedor", label: "Comedor" },
   { value: "cocineta", label: "Cocineta" },
-  { value: "cuarto-hidro", label: "Cuarto Hidroneumático" },
   { value: "enfermeria", label: "Enfermería" },
   { value: "instalaciones", label: "Instalaciones" },
   { value: "oficinas", label: "Oficinas" },

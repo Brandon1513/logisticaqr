@@ -1,6 +1,6 @@
 const QRModel = require("../models/QR");
 
-const saveQR = async (req, res) => {
+exports.saveQR = async (req, res) => {
   try {
     // Eliminar campos vacíos del cuerpo de la solicitud
     const filteredData = {};
@@ -21,6 +21,11 @@ const saveQR = async (req, res) => {
   }
 };
 
-module.exports = {
-  saveQR,
+exports.getQrData = async (req, res) => {
+  try {
+    const qrDataList = await QRModel.find(); 
+    res.json(qrDataList);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
