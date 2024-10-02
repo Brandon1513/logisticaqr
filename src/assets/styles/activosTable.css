@@ -73,7 +73,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     width: 90%;
     max-width: 600px;
-    text-align: center; /* Centramos el contenido */
+    text-align: center; 
   }
   
   /* Título centrado */
@@ -108,7 +108,7 @@
     background-color: #4CAF50; /* Verde */
   }
   
-  /* Efecto hover en los botones */
+  
   .modal-buttons button:hover {
     opacity: 0.8;
   }

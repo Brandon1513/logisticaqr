@@ -22,9 +22,7 @@ const ActivosTable = () => {
         const response = await fetch(`${API_BASE_URL}/qr/qr-data`);
         const data = await response.json();
 
-        console.log("Datos recibidos de la API:", data); // Registro de datos recibidos
-
-        // Verifica si los datos son un array antes de establecer el estado
+        console.log("Datos recibidos de la API:", data); 
         if (Array.isArray(data)) {
           setQrData(data);
         } else {
@@ -133,25 +131,31 @@ const ActivosTable = () => {
 
             {modalData.ubicacionProd && (
               <p>
-                <strong>Sub-Ubicación:</strong> {modalData.ubicacionProd}
+                <strong>Sub-Ubicación:</strong>{" "}
+                {produccionMap[modalData.ubicacionProd] ||
+                  modalData.ubicacionProd}
               </p>
             )}
 
             {modalData.ubicacionAlma && (
               <p>
-                <strong>Sub-Ubicación:</strong> {modalData.ubicacionAlma}
+                <strong>Sub-Ubicación:</strong>{" "}
+                {almacenMap[modalData.ubicacionAlma] || modalData.ubicacionAlma}
               </p>
             )}
 
             {modalData.ubicacionSanita && (
               <p>
-                <strong>Sub-Ubicación:</strong> {modalData.ubicacionSanita}
+                <strong>Sub-Ubicación:</strong>{" "}
+                {sanitariosMap[modalData.ubicacionSanita] ||
+                  modalData.ubicacionSanita}
               </p>
             )}
 
             {modalData.ubicacionOfi && (
               <p>
-                <strong>Sub-Ubicación:</strong> {modalData.ubicacionOfi}
+                <strong>Sub-Ubicación:</strong>{" "}
+                {oficinasMap[modalData.ubicacionOfi] || modalData.ubicacionOfi}
               </p>
             )}
 
@@ -164,9 +168,7 @@ const ActivosTable = () => {
 
             {/* Botones centrados */}
             <div className="modal-buttons">
-              <button className="generate-qr-button">
-                Generar QR
-              </button>
+              <button className="generate-qr-button">Generar QR</button>
               <button className="close-button" onClick={closeModal}>
                 Cerrar
               </button>
