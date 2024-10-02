@@ -34,26 +34,30 @@ function DataTable() {
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
     if (!confirmDelete) return;
-
+  
     try {
-      const response = await fetch(`${API_BASE_URL}/user/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/user/delete/${id}`, {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Asegúrate de que `token` esté disponible
         },
       });
-
+  
       if (response.ok) {
-        setUsers(users.filter((user) => user._id !== id));
+        // Actualizar la lista de usuarios eliminando el que fue borrado
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
         alert("Usuario eliminado exitosamente");
       } else {
-        throw new Error("Error al eliminar el usuario");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Error al eliminar el usuario");
       }
     } catch (error) {
       console.error("Error al eliminar el usuario:", error);
       alert("No se pudo eliminar el usuario. Intenta de nuevo más tarde.");
     }
   };
+  
 
   const handleEdit = (user) => {
     navigate("/editProfile", { state: { user } });

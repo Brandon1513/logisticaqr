@@ -150,6 +150,60 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.updateUser = async (req, res) => {
+  const { id } = req.params; // Obtener el ID del usuario a actualizar
+  const { username, email, password, rol, departamento } = req.body;
+
+  try {
+    // Buscar al usuario por ID
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    // Actualizar los campos del usuario
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.rol = rol || user.rol;
+    user.departamento = departamento || user.departamento;
+
+    // Actualizar contraseña solo si se proporciona una nueva
+    if (password) {
+      user.password = password; // Asegúrate de tener hash para las contraseñas
+    }
+
+    // Guardar los cambios en la base de datos
+    const updatedUser = await user.save();
+
+    // Enviar respuesta de éxito
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Error al actualizar el usuario:", error);
+    res.status(500).json({ message: "Error al actualizar el usuario" });
+  }
+};
+
+// Eliminar usuario por ID
+exports.deleteUser = async (req, res) => {
+  const { id } = req.params; // Obtener el ID del usuario a eliminar
+
+  try {
+    // Usar findByIdAndDelete para eliminar directamente el usuario
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    res.json({ message: "Usuario eliminado exitosamente" });
+  } catch (error) {
+    console.error("Error al eliminar el usuario:", error);
+    res.status(500).json({ message: "Error al eliminar el usuario" });
+  }
+};
+
+
+
 // Logout de usuario
 exports.logoutUser = (req, res) => {
   // Aquí puedes invalidar el token en el cliente

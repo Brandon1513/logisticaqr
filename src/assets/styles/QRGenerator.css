@@ -48,10 +48,10 @@ select:focus {
   border-color: #9163AE;
 }
 
-.submit-button {
+.qr-button {
   width: 100%;
-  padding: 10px;
-  background-color: #9163AE;
+  padding: 10px 20px;
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 5px;
@@ -59,14 +59,15 @@ select:focus {
   font-size: 16px;
 }
 
-.submit-button:hover {
-  background-color: #7b4d9c;
+.qr-button:hover {
+  background-color: #6dad6f;
 }
 
 .button-group {
   display: flex;
   gap: 10px;
 }
+
 
 .submit-button, .clear-button {
   padding: 10px 20px;
@@ -100,6 +101,7 @@ select:focus {
   font-size: 16px;
   width: 100%;
   margin-top: 10px;
+  
 }
 
 .export-button:hover {
@@ -120,9 +122,37 @@ select:focus {
   margin-top: 0;
 }
 
+.qr-code-container{
+  margin-top: 20px;
+}
+
 .qr-code {
   display: flex;
   justify-content: center; 
   align-items: center; 
   margin-top: 20px; 
+  margin-bottom: 20px;
+}
+
+.save-button {
+  background-color: #2a3443;
+  color: white;
+  font-weight: lighter;
+  font-size: 16px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.save-button:hover {
+  background-color: #374151;
+}
+
+.save-button:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }

@@ -32,9 +32,9 @@ function App() {
 
   return (
     <div className="App">
-      {location.pathname !== "/" && <Header rol={rol} />} {/* Cambiado a "/" */}
+      {location.pathname !== "/" && <Header rol={rol} />}
       <Routes>
-        <Route path="/" element={<Login />} /> {/* Ruta de login */}
+        <Route path="/" element={<Login />} />
         <Route
           path="/home"
           element={token ? <Home /> : <Navigate to="/" replace />}

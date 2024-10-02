@@ -15,14 +15,15 @@ import {
   oficinasMap,
   tipoActivo,
 } from "../assets/Ubicaciones";
+import { API_BASE_URL } from "../config";
 
 function QRForm() {
   const [formData, setFormData] = useState({
     nombre: "",
     noSerie: "",
-    proveedor: "", 
-    estado: "Activo", 
-    referencia: "Dasavena2024", 
+    proveedor: "",
+    estado: "Activo",
+    referencia: "Dasavena2024",
     tipo: "",
     ubicacion: "",
     propietario: "",
@@ -88,13 +89,39 @@ function QRForm() {
     console.log(formData);
   };
 
+  const token = localStorage.getItem("token");
+
+  const handleSave = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/qr/save-qr`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          ...formData,
+          qrData,
+        }),
+      });
+
+      if (response.ok) {
+        alert("Datos guardados correctamente.");
+      } else {
+        alert("Error al guardar los datos.");
+      }
+    } catch (error) {
+      console.error("Error al guardar los datos:", error);
+    }
+  };
+
   const handleClear = () => {
     setFormData({
       nombre: "",
       noSerie: "",
-      proveedor: "", 
-      estado: "Activo", 
-      referencia: "Dasavena2024", 
+      proveedor: "",
+      estado: "Activo",
+      referencia: "Dasavena2024",
       tipo: "",
       ubicacion: "",
       propietario: "",
@@ -108,45 +135,43 @@ function QRForm() {
 
   const handleExport = () => {
     const canvas = qrRef.current.querySelector("canvas");
-  
+
     const exportCanvas = document.createElement("canvas");
     const ctx = exportCanvas.getContext("2d");
-  
+
     const exportWidth = canvas.width + 10;
     const exportHeight = canvas.height + 120;
     exportCanvas.width = exportWidth;
     exportCanvas.height = exportHeight;
-  
+
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, exportWidth, exportHeight);
-  
+
     ctx.fillStyle = "black";
     ctx.font = "bold 20px Arial";
     ctx.textAlign = "center";
-  
+
     const title = "Dasavena";
     const reference = "Referencia";
-  
+
     const titleYPosition = 30;
     const referenceYPosition = titleYPosition + 30;
-  
+
     ctx.fillText(title, exportWidth / 2, titleYPosition);
     ctx.font = "20px Arial";
     ctx.fillText(reference, exportWidth / 2, referenceYPosition);
-  
+
     const qrYPosition = referenceYPosition + 20;
     const qrXPosition = (exportWidth - canvas.width) / 2;
     ctx.drawImage(canvas, qrXPosition, qrYPosition);
-  
+
     const exportPngUrl = exportCanvas.toDataURL("image/png");
-  
+
     const downloadLink = document.createElement("a");
     downloadLink.href = exportPngUrl;
     downloadLink.download = `QR_${formData.nombre}_${formData.ubicacion}.png`;
     downloadLink.click();
   };
-  
-
 
   return (
     <div className="form-container">
@@ -197,14 +222,15 @@ function QRForm() {
           >
             <option value="">Selecciona el tipo</option>
             {tipoActivo.map((tipo) => (
-              <option key={tipo.value} value={tipo.value} >
+              <option key={tipo.value} value={tipo.value}>
                 {tipo.label}
               </option>
             ))}
           </select>
         </div>
 
-        {(formData.tipo === "equipo-computo" || formData.tipo === "transporte") && (
+        {(formData.tipo === "equipo-computo" ||
+          formData.tipo === "transporte") && (
           <div className="input-group">
             <label htmlFor="propietario">Nombre del Propietario:</label>
             <input
@@ -320,7 +346,7 @@ function QRForm() {
         )}
 
         <div className="button-group">
-          <button type="submit" className="submit-button">
+          <button type="submit" className="qr-button">
             Generar QR
           </button>
 
@@ -393,9 +419,15 @@ function QRForm() {
             )}
           </div>
 
-          <button className="export-button" onClick={handleExport}>
-            Exportar QR como PNG
-          </button>
+          <div className="save-group">
+            <button className="export-button" onClick={handleExport}>
+              Exportar QR como PNG
+            </button>
+
+            <button type="button" className="save-button" onClick={handleSave}>
+              Guardar
+            </button>
+          </div>
         </div>
       )}
     </div>

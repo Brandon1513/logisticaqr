@@ -7,6 +7,8 @@ const {
   updateProfile,
   logoutUser,
   getAllUsers,
+  updateUser,
+  deleteUser,
 } = require("../controllers/userController");
 const auth = require("../middleware/authMiddleware");
 const isAdmin = require("../middleware/isAdmin"); // Asegúrate de que esto esté definido
@@ -50,5 +52,9 @@ router.post("/logout", auth, logoutUser);
 
 // Ruta para obtener todos los usuarios
 router.get("/dataUser", getAllUsers);
+
+router.delete('/delete/:id', deleteUser);
+
+router.put("/:id", auth, updateUser);
 
 module.exports = router;
