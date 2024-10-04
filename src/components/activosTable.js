@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "../config";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
@@ -17,7 +17,8 @@ const ActivosTable = () => {
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrString, setQrString] = useState("");
-  const qrRef = useRef(null); // Crear una referencia para el QR
+  const qrRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchQrData = async () => {
@@ -48,7 +49,7 @@ const ActivosTable = () => {
   const closeModal = () => {
     setModalData(null);
     setIsModalOpen(false);
-    setQrString(""); // Limpiar el QR al cerrar el modal
+    setQrString("");
   };
 
   const generateQrString = (data) => {
@@ -89,44 +90,44 @@ const ActivosTable = () => {
 
   const downloadQR = () => {
     const canvas = qrRef.current.querySelector("canvas");
-  
+
     // Crear un nuevo canvas para la exportación
     const exportCanvas = document.createElement("canvas");
     const ctx = exportCanvas.getContext("2d");
-  
+
     // Definir dimensiones de exportación
     const exportWidth = canvas.width + 10;
     const exportHeight = canvas.height + 120;
     exportCanvas.width = exportWidth;
     exportCanvas.height = exportHeight;
-  
+
     // Fondo blanco
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, exportWidth, exportHeight);
-  
+
     // Texto del título (ejemplo: "Dasavena")
     ctx.fillStyle = "black";
     ctx.font = "bold 20px Arial";
     ctx.textAlign = "center";
-  
+
     const title = "Dasavena"; // Puedes cambiarlo si lo deseas
     const reference = modalData.referencia || "Referencia"; // La referencia que viene de modalData
-  
+
     const titleYPosition = 30;
     const referenceYPosition = titleYPosition + 30;
-  
+
     ctx.fillText(title, exportWidth / 2, titleYPosition);
     ctx.font = "20px Arial";
     ctx.fillText(reference, exportWidth / 2, referenceYPosition);
-  
+
     // Posicionar el QR debajo del texto
     const qrYPosition = referenceYPosition + 20;
     const qrXPosition = (exportWidth - canvas.width) / 2;
     ctx.drawImage(canvas, qrXPosition, qrYPosition);
-  
+
     // Convertir el canvas a URL de imagen PNG
     const exportPngUrl = exportCanvas.toDataURL("image/png");
-  
+
     // Crear enlace de descarga
     const downloadLink = document.createElement("a");
     downloadLink.href = exportPngUrl;
@@ -135,7 +136,10 @@ const ActivosTable = () => {
     downloadLink.click();
     document.body.removeChild(downloadLink);
   };
-  
+
+  const handleEdit = (item) => {
+    navigate(`/edit-qr/${item._id}`, { state: { activo : item } });
+  };
 
   return (
     <div>
@@ -166,9 +170,12 @@ const ActivosTable = () => {
                   Ver
                 </button>
 
-                <Link to={`/edit/${item._id}`}>
-                  <button className="edit-button">Editar</button>
-                </Link>
+                <button
+                  className="edit-button"
+                  onClick={() => handleEdit(item)}
+                >
+                  Editar
+                </button>
                 <button
                   className="delete-button"
                   //onClick={() => handleDelete(item._id)}

@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import ManageUsers from "./pages/ManageUsers";
 import FormUser from "./pages/FormUser";
 import ConsultaActivos from "./pages/ConsultaActivo";
+import EditQR from "./pages/EditQR";
 function App() {
   const location = useLocation();
   const [rol, setRole] = useState(null);
@@ -57,6 +58,10 @@ function App() {
             element={token ? <ManageUsers /> : <Navigate to="/" replace />}
           />
         )}
+        <Route
+          path="/edit-qr/:id"
+          element={token ? <EditQR /> : <Navigate to="/" />}
+        />
         <Route
           path="/create-user"
           element={token ? <FormUser /> : <Navigate to="/" replace />}
