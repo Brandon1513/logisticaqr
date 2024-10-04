@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "../config";
 import { Link } from "react-router-dom";
+import { QRCodeCanvas } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
   tipoMap,
@@ -15,6 +16,8 @@ const ActivosTable = () => {
   const [qrData, setQrData] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [qrString, setQrString] = useState("");
+  const qrRef = useRef(null); // Crear una referencia para el QR
 
   useEffect(() => {
     const fetchQrData = async () => {
@@ -22,7 +25,7 @@ const ActivosTable = () => {
         const response = await fetch(`${API_BASE_URL}/qr/qr-data`);
         const data = await response.json();
 
-        console.log("Datos recibidos de la API:", data); 
+        console.log("Datos recibidos de la API:", data);
         if (Array.isArray(data)) {
           setQrData(data);
         } else {
@@ -45,12 +48,94 @@ const ActivosTable = () => {
   const closeModal = () => {
     setModalData(null);
     setIsModalOpen(false);
+    setQrString(""); // Limpiar el QR al cerrar el modal
   };
 
-  const handleDelete = (id) => {
-    // Aquí debes implementar la lógica para eliminar el elemento
-    console.log(`Eliminar elemento con ID: ${id}`);
+  const generateQrString = (data) => {
+    const qrContent = `
+      Nombre: ${data.nombre}\n
+      No. de Serie: ${data.noSerie}\n
+      Proveedor: ${data.proveedor}\n
+      Tipo: ${tipoMap[data.tipo] || data.tipo}\n
+      Ubicación: ${ubicacionesMap[data.ubicacion] || data.ubicacion}\n
+      ${data.propietario ? `Propietario: ${data.propietario}\n` : ""}
+      ${
+        data.ubicacionProd
+          ? `Producción: ${
+              produccionMap[data.ubicacionProd] || data.ubicacionProd
+            }\n`
+          : ""
+      }
+      ${
+        data.ubicacionAlma
+          ? `Almacén: ${almacenMap[data.ubicacionAlma] || data.ubicacionAlma}\n`
+          : ""
+      }
+      ${
+        data.ubicacionSanita
+          ? `Sanitario: ${
+              sanitariosMap[data.ubicacionSanita] || data.ubicacionSanita
+            }\n`
+          : ""
+      }
+      ${
+        data.ubicacionOfi
+          ? `Oficina: ${oficinasMap[data.ubicacionOfi] || data.ubicacionOfi}\n`
+          : ""
+      }
+    `;
+    setQrString(qrContent.trim());
   };
+
+  const downloadQR = () => {
+    const canvas = qrRef.current.querySelector("canvas");
+  
+    // Crear un nuevo canvas para la exportación
+    const exportCanvas = document.createElement("canvas");
+    const ctx = exportCanvas.getContext("2d");
+  
+    // Definir dimensiones de exportación
+    const exportWidth = canvas.width + 10;
+    const exportHeight = canvas.height + 120;
+    exportCanvas.width = exportWidth;
+    exportCanvas.height = exportHeight;
+  
+    // Fondo blanco
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, exportWidth, exportHeight);
+  
+    // Texto del título (ejemplo: "Dasavena")
+    ctx.fillStyle = "black";
+    ctx.font = "bold 20px Arial";
+    ctx.textAlign = "center";
+  
+    const title = "Dasavena"; // Puedes cambiarlo si lo deseas
+    const reference = modalData.referencia || "Referencia"; // La referencia que viene de modalData
+  
+    const titleYPosition = 30;
+    const referenceYPosition = titleYPosition + 30;
+  
+    ctx.fillText(title, exportWidth / 2, titleYPosition);
+    ctx.font = "20px Arial";
+    ctx.fillText(reference, exportWidth / 2, referenceYPosition);
+  
+    // Posicionar el QR debajo del texto
+    const qrYPosition = referenceYPosition + 20;
+    const qrXPosition = (exportWidth - canvas.width) / 2;
+    ctx.drawImage(canvas, qrXPosition, qrYPosition);
+  
+    // Convertir el canvas a URL de imagen PNG
+    const exportPngUrl = exportCanvas.toDataURL("image/png");
+  
+    // Crear enlace de descarga
+    const downloadLink = document.createElement("a");
+    downloadLink.href = exportPngUrl;
+    downloadLink.download = `QR_${modalData.nombre}_${modalData.ubicacion}.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+  
 
   return (
     <div>
@@ -86,7 +171,7 @@ const ActivosTable = () => {
                 </Link>
                 <button
                   className="delete-button"
-                  onClick={() => handleDelete(item._id)}
+                  //onClick={() => handleDelete(item._id)}
                 >
                   Eliminar
                 </button>
@@ -99,7 +184,6 @@ const ActivosTable = () => {
       {isModalOpen && modalData && (
         <div className="modal-overlay">
           <div className="modal-content">
-            {/* Título centrado */}
             <h3>Detalles del QR</h3>
 
             <p>
@@ -123,7 +207,6 @@ const ActivosTable = () => {
                 <strong>Propietario:</strong> {modalData.propietario}
               </p>
             )}
-
             <p>
               <strong>Ubicación:</strong>{" "}
               {ubicacionesMap[modalData.ubicacion] || modalData.ubicacion}
@@ -131,7 +214,7 @@ const ActivosTable = () => {
 
             {modalData.ubicacionProd && (
               <p>
-                <strong>Sub-Ubicación:</strong>{" "}
+                <strong>Producción:</strong>{" "}
                 {produccionMap[modalData.ubicacionProd] ||
                   modalData.ubicacionProd}
               </p>
@@ -139,14 +222,14 @@ const ActivosTable = () => {
 
             {modalData.ubicacionAlma && (
               <p>
-                <strong>Sub-Ubicación:</strong>{" "}
+                <strong>Almacén:</strong>{" "}
                 {almacenMap[modalData.ubicacionAlma] || modalData.ubicacionAlma}
               </p>
             )}
 
             {modalData.ubicacionSanita && (
               <p>
-                <strong>Sub-Ubicación:</strong>{" "}
+                <strong>Sanitario:</strong>{" "}
                 {sanitariosMap[modalData.ubicacionSanita] ||
                   modalData.ubicacionSanita}
               </p>
@@ -154,7 +237,7 @@ const ActivosTable = () => {
 
             {modalData.ubicacionOfi && (
               <p>
-                <strong>Sub-Ubicación:</strong>{" "}
+                <strong>Oficina:</strong>{" "}
                 {oficinasMap[modalData.ubicacionOfi] || modalData.ubicacionOfi}
               </p>
             )}
@@ -166,13 +249,31 @@ const ActivosTable = () => {
               <strong>Estado:</strong> {modalData.estado}
             </p>
 
-            {/* Botones centrados */}
             <div className="modal-buttons">
-              <button className="generate-qr-button">Generar QR</button>
+              <button
+                className="generate-qr-button"
+                onClick={() => generateQrString(modalData)}
+              >
+                Generar QR
+              </button>
               <button className="close-button" onClick={closeModal}>
                 Cerrar
               </button>
             </div>
+
+            {qrString && (
+              <div className="qr-code" ref={qrRef}>
+                <QRCodeCanvas value={qrString} size={256} />
+              </div>
+            )}
+
+            {qrString && (
+              <div className="export-qr">
+                <button className="export-button" onClick={downloadQR}>
+                  Exportar QR a PNG
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

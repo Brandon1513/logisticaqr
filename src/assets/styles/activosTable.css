@@ -115,7 +115,7 @@
   
   
   .view-button {
-    background-color: #2196F3;
+    background-color: #FF9800;
     color: white;
     padding: 8px 12px;
     border: none;
@@ -125,5 +125,22 @@
   
   .view-button:hover {
     opacity: 0.8;
+  }
+
+  .export-button {
+    background-color: #FF9800;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 50%;
+    margin-top: 5px;
+    
+  }
+  
+  .export-button:hover {
+    background-color: #e68900;
   }
   
