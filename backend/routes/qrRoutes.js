@@ -1,5 +1,5 @@
 const express = require("express");
-const { saveQR, getQrData } = require("../controllers/QrController");
+const { saveQR, getQrData, deleteQR } = require("../controllers/QrController");
 const auth = require("../middleware/authMiddleware");
 
 const router = express.Router();
@@ -8,5 +8,8 @@ const router = express.Router();
 router.post("/save-qr", auth, saveQR);
 
 router.get("/qr-data", getQrData);
+
+// Ruta para eliminar un QR por su ID (protegida por autenticación)
+router.delete("/delete/:id", auth, deleteQR);
 
 module.exports = router;

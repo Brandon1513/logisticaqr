@@ -138,7 +138,35 @@ const ActivosTable = () => {
   };
 
   const handleEdit = (item) => {
-    navigate(`/edit-qr/${item._id}`, { state: { activo : item } });
+    navigate(`/edit-qr/${item._id}`, { state: { activo: item } });
+  };
+
+
+  const token = localStorage.getItem("token");
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este QR?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/qr/delete/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        alert("QR eliminado correctamente");
+        setQrData(qrData.filter((item) => item._id !== id));
+      } else {
+        alert("Error al eliminar el QR");
+      }
+    } catch (error) {
+      console.error("Error eliminando QR:", error);
+      alert("Hubo un error al intentar eliminar el QR");
+    }
   };
 
   return (
@@ -178,7 +206,7 @@ const ActivosTable = () => {
                 </button>
                 <button
                   className="delete-button"
-                  //onClick={() => handleDelete(item._id)}
+                  onClick={() => handleDelete(item._id)}
                 >
                   Eliminar
                 </button>
