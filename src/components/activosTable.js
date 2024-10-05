@@ -158,20 +158,20 @@ const ActivosTable = () => {
       });
 
       if (response.ok) {
-        alert("QR eliminado correctamente");
+        alert("Activo eliminado correctamente");
         setQrData(qrData.filter((item) => item._id !== id));
       } else {
-        alert("Error al eliminar el QR");
+        alert("Error al eliminar el Activo");
       }
     } catch (error) {
       console.error("Error eliminando QR:", error);
-      alert("Hubo un error al intentar eliminar el QR");
+      alert("Hubo un error al intentar eliminar el Activo");
     }
   };
 
   return (
     <div>
-      <h2>Datos de los Códigos QR</h2>
+      <h2>Activos Dasavena</h2>
       <table className="user-table">
         <thead>
           <tr>

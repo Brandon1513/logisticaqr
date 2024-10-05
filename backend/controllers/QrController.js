@@ -46,3 +46,28 @@ exports.deleteQR = async (req, res) => {
     res.status(500).json({ message: "Error al eliminar el QR", error });
   }
 };
+
+exports.updateQR = async (req, res) => {
+  try {
+    const { id } = req.params; // Obtener el ID desde los parámetros de la URL
+    const filteredData = {};
+
+    // Filtrar los datos para evitar campos vacíos
+    Object.keys(req.body).forEach((key) => {
+      if (req.body[key] && req.body[key].trim() !== "") {
+        filteredData[key] = req.body[key].trim();
+      }
+    });
+
+    // Actualizar el QR en la base de datos
+    const updatedQR = await QRModel.findByIdAndUpdate(id, filteredData, { new: true });
+
+    if (!updatedQR) {
+      return res.status(404).json({ message: "QR no encontrado" });
+    }
+
+    res.status(200).json(updatedQR); // Enviar el QR actualizado como respuesta
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar el QR", error: error.message });
+  }
+};

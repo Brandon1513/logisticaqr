@@ -1,54 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { ubicaciones,
-    produccion,
-    almacen,
-    baños,
-    oficinas,
-    tipoActivo,
+import React, { useState, useEffect } from "react";
+import {
+  ubicaciones,
+  produccion,
+  almacen,
+  baños,
+  oficinas,
+  tipoActivo,
+} from "../assets/Ubicaciones";
+import { useLocation, useNavigate } from "react-router-dom";
+import { API_BASE_URL } from "../config";
 
- } from '../assets/Ubicaciones';
- import { useLocation } from 'react-router-dom';
-
-const EditQrForm = ({ initialData }) => {
+const EditQrForm = () => {
+  const location = useLocation();
+  const initialData = location.state?.activo || {}; // Cargar datos del activo o inicializar vacío
   const [formData, setFormData] = useState(initialData);
-    const location = useLocation();
-    const activo = location.state?.activo;
+  const navigate = useNavigate();
 
-  // Manejar cambios en el formulario
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
+    }
+  }, [initialData]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Enviar formulario
+  const token = localStorage.getItem("token")
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/qr/${formData._id}`, {
-        method: 'PUT',
+      const response = await fetch(`${API_BASE_URL}/qr/update/${formData._id}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error('Error actualizando el QR');
+        throw new Error("Error actualizando el QR");
       }
 
       const updatedQR = await response.json();
-      alert('QR actualizado correctamente');
+      alert("QR actualizado correctamente");
+      navigate("/datatable");
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error actualizando el QR');
+      console.error("Error:", error);
+      alert("Error actualizando el QR");
     }
   };
 
   return (
-    
     <div className="form-container">
-      <h2>Editar Código QR</h2>
+      <h2>Editar Activo</h2>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre:</label>
@@ -83,6 +91,21 @@ const EditQrForm = ({ initialData }) => {
             required
           />
         </div>
+
+        <div className="input-group">
+          <label htmlFor="estado">Estado:</label>
+          <select
+            id="estado"
+            name="estado"
+            value={formData.estado}
+            onChange={handleChange}
+            required
+          >
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </div>
+
         <div className="input-group">
           <label htmlFor="tipo">Tipo:</label>
           <select
@@ -101,7 +124,8 @@ const EditQrForm = ({ initialData }) => {
           </select>
         </div>
 
-        {(formData.tipo === 'equipo-computo' || formData.tipo === 'transporte') && (
+        {(formData.tipo === "equipo-computo" ||
+          formData.tipo === "transporte") && (
           <div className="input-group">
             <label htmlFor="propietario">Nombre del Propietario:</label>
             <input
@@ -110,7 +134,7 @@ const EditQrForm = ({ initialData }) => {
               name="propietario"
               value={formData.propietario}
               onChange={handleChange}
-              required={formData.tipo === 'equipo-computo'}
+              required={formData.tipo === "equipo-computo"}
             />
           </div>
         )}
@@ -133,7 +157,7 @@ const EditQrForm = ({ initialData }) => {
           </select>
         </div>
 
-        {formData.ubicacion === 'produccion' && (
+        {formData.ubicacion === "produccion" && (
           <div className="input-group">
             <label htmlFor="ubicacionProd">Ubicación en Producción</label>
             <select
@@ -153,7 +177,7 @@ const EditQrForm = ({ initialData }) => {
           </div>
         )}
 
-        {formData.ubicacion === 'almacen' && (
+        {formData.ubicacion === "almacen" && (
           <div className="input-group">
             <label htmlFor="ubicacionAlma">Ubicación en Almacén</label>
             <select
@@ -173,7 +197,7 @@ const EditQrForm = ({ initialData }) => {
           </div>
         )}
 
-        {formData.ubicacion === 'sanitario' && (
+        {formData.ubicacion === "sanitario" && (
           <div className="input-group">
             <label htmlFor="ubicacionSanita">Ubicación del Sanitario</label>
             <select
@@ -185,7 +209,10 @@ const EditQrForm = ({ initialData }) => {
             >
               <option></option>
               {baños.map((ubicacionSanita) => (
-                <option key={ubicacionSanita.value} value={ubicacionSanita.value}>
+                <option
+                  key={ubicacionSanita.value}
+                  value={ubicacionSanita.value}
+                >
                   {ubicacionSanita.label}
                 </option>
               ))}
@@ -193,7 +220,7 @@ const EditQrForm = ({ initialData }) => {
           </div>
         )}
 
-        {formData.ubicacion === 'oficinas' && (
+        {formData.ubicacion === "oficinas" && (
           <div className="input-group">
             <label htmlFor="ubicacionOfi">Ubicación en Oficina</label>
             <select
@@ -213,7 +240,7 @@ const EditQrForm = ({ initialData }) => {
           </div>
         )}
 
-        <button type="submit">Guardar Cambios</button>
+        <button className="save-button" type="submit">Guardar Cambios</button>
       </form>
     </div>
   );
