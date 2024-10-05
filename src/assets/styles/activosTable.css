@@ -144,3 +144,49 @@
     background-color: #e68900;
   }
   
+  .search-bar {
+    padding: 8px;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .export-excel {
+    background-color: #4CAF50; /* Verde para el botón de Excel */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: auto;
+    margin-right: 10px; /* Espaciado entre botones */
+  }
+  
+  .export-excel:hover {
+    background-color: #45a049; /* Color de hover para el botón de Excel */
+  }
+  
+  .export-pdf {
+    background-color: #F44336; /* Rojo para el botón de PDF */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: auto;
+  }
+  
+  .export-pdf:hover {
+    background-color: #e53935; 
+  }
+  
+  .export-buttons {
+    display: flex; 
+    justify-content: flex-start; 
+  }
+  

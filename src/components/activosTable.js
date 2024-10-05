@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "../config";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
@@ -11,6 +11,9 @@ import {
   sanitariosMap,
   oficinasMap,
 } from "../assets/Ubicaciones";
+import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const ActivosTable = () => {
   const [qrData, setQrData] = useState([]);
@@ -19,6 +22,7 @@ const ActivosTable = () => {
   const [qrString, setQrString] = useState("");
   const qrRef = useRef(null);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const fetchQrData = async () => {
@@ -141,7 +145,6 @@ const ActivosTable = () => {
     navigate(`/edit-qr/${item._id}`, { state: { activo: item } });
   };
 
-
   const token = localStorage.getItem("token");
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm(
@@ -169,9 +172,101 @@ const ActivosTable = () => {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // Actualizar el término de búsqueda
+  };
+
+  const filteredData = qrData.filter(
+    (item) =>
+      item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.noSerie.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.proveedor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      tipoMap[item.tipo]?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      ubicacionesMap[item.ubicacion]
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      item.estado.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const exportToExcel = () => {
+    const headers = [
+      "Nombre",
+      "No. de Serie",
+      "Proveedor",
+      "Tipo",
+      "Ubicación",
+      "Estado",
+    ];
+    const rows = filteredData.map((item) => [
+      item.nombre,
+      item.noSerie,
+      item.proveedor,
+      tipoMap[item.tipo] || item.tipo,
+      ubicacionesMap[item.ubicacion] || item.ubicacion,
+      item.estado,
+    ]);
+
+    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Activos Filtrados");
+
+    XLSX.writeFile(workbook, "activos_filtrados.xlsx");
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+
+    const tableColumn = [
+      "Nombre",
+      "No. de Serie",
+      "Proveedor",
+      "Tipo",
+      "Ubicación",
+      "Estado",
+    ];
+    const tableRows = [];
+
+    filteredData.forEach((item) => {
+      const rowData = [
+        item.nombre,
+        item.noSerie,
+        item.proveedor,
+        item.tipo,
+        item.ubicacion,
+        item.estado,
+      ];
+      tableRows.push(rowData);
+    });
+
+    doc.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+    });
+
+    doc.save("activos_filtrados.pdf");
+  };
+
   return (
     <div>
       <h2>Activos Dasavena</h2>
+
+      <input
+        type="text"
+        placeholder="Buscar"
+        value={searchTerm}
+        onChange={handleSearchChange}
+        className="search-bar"
+      />
+      <div className="export-buttons">
+        <button onClick={exportToExcel} className="export-excel">
+          Exportar Excel
+        </button>
+
+        <button onClick={exportToPDF} className="export-pdf">
+          Exportar PDF
+        </button>
+      </div>
+
       <table className="user-table">
         <thead>
           <tr>
@@ -185,7 +280,7 @@ const ActivosTable = () => {
           </tr>
         </thead>
         <tbody>
-          {qrData.map((item) => (
+          {filteredData.map((item) => (
             <tr key={item._id}>
               <td>{item.nombre}</td>
               <td>{item.noSerie}</td>

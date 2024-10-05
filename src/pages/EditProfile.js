@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 import "../assets/styles/editProfile.css";
@@ -117,10 +117,7 @@ function EditProfile() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="submit-button-Update"
-        >
+        <button type="submit" className="submit-button-Update">
           Actualizar Usuario
         </button>
       </form>

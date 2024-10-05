@@ -27,25 +27,27 @@ const EditQrForm = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${API_BASE_URL}/qr/update/${formData._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/qr/update/${formData._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Error actualizando el QR");
       }
 
-      const updatedQR = await response.json();
       alert("QR actualizado correctamente");
       navigate("/datatable");
     } catch (error) {
@@ -240,7 +242,9 @@ const EditQrForm = () => {
           </div>
         )}
 
-        <button className="save-button" type="submit">Guardar Cambios</button>
+        <button className="save-button" type="submit">
+          Guardar Cambios
+        </button>
       </form>
     </div>
   );

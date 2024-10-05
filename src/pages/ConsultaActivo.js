@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import ActivosTable from "../components/activosTable";
 import "../assets/styles/ManageUser.css";
 
