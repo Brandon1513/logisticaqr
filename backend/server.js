@@ -18,7 +18,7 @@ app.use(cors());
 // Ruta User
 app.use("/user", require("./routes/userRoutes"));
 // Ruta QR
-app.use("/qr", qrRoutes)
+app.use("/qr", qrRoutes)  
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
