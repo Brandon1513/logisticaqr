@@ -1,1 +1,1 @@
-export const API_BASE_URL = 'http://152.53.54.225:80';
+export const API_BASE_URL = 'https://qrback.domcloud.dev/';
