@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "../config";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { QRCodeCanvas } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
@@ -23,6 +23,18 @@ const ActivosTable = () => {
   const qrRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
+  const location = useLocation();
+  const [rol, setRole] = useState(null);
+
+  useEffect(() => {
+    const currentState = location.state;
+    if (currentState && currentState.rol) {
+      setRole(currentState.rol);
+    } else {
+      const storedRole = localStorage.getItem("rol");
+      setRole(storedRole);
+    }
+  }, [location]);
 
   useEffect(() => {
     const fetchQrData = async () => {
@@ -299,12 +311,15 @@ const ActivosTable = () => {
                 >
                   Editar
                 </button>
-                <button
-                  className="delete-button"
-                  onClick={() => handleDelete(item._id)}
-                >
-                  Eliminar
-                </button>
+
+                {rol === "Administrador" && (
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(item._id)}
+                  >
+                    Eliminar
+                  </button>
+                )}
               </td>
             </tr>
           ))}

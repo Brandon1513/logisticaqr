@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   ubicaciones,
   produccion,
@@ -12,9 +12,23 @@ import { API_BASE_URL } from "../config";
 
 const EditQrForm = () => {
   const location = useLocation();
-  const initialData = location.state?.activo || {}; // Cargar datos del activo o inicializar vacío
-  const [formData, setFormData] = useState(initialData);
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
+  const [rol, setRole] = useState(null);
+
+  useEffect(() => {
+    const currentState = location.state;
+    if (currentState && currentState.rol) {
+      setRole(currentState.rol);
+    } else {
+      const storedRole = localStorage.getItem("rol");
+      setRole(storedRole);
+    }
+  }, [location]);
+
+  const initialData = useMemo(() => {
+    return location.state?.activo || {};
+  }, [location.state?.activo]);
 
   useEffect(() => {
     if (initialData) {
@@ -69,6 +83,7 @@ const EditQrForm = () => {
             value={formData.nombre}
             onChange={handleChange}
             required
+            readOnly={rol !== "Administrador"}
           />
         </div>
         <div className="input-group">
@@ -80,6 +95,7 @@ const EditQrForm = () => {
             value={formData.noSerie}
             onChange={handleChange}
             required
+            readOnly={rol !== "Administrador"}
           />
         </div>
         <div className="input-group">
@@ -91,6 +107,7 @@ const EditQrForm = () => {
             value={formData.proveedor}
             onChange={handleChange}
             required
+            readOnly={rol !== "Administrador"}
           />
         </div>
 
@@ -116,6 +133,7 @@ const EditQrForm = () => {
             value={formData.tipo}
             onChange={handleChange}
             required
+            disabled={rol !== "Administrador"}
           >
             <option value="">Selecciona el tipo</option>
             {tipoActivo.map((tipo) => (
@@ -137,6 +155,7 @@ const EditQrForm = () => {
               value={formData.propietario}
               onChange={handleChange}
               required={formData.tipo === "equipo-computo"}
+              readOnly={rol !== "Administrador"}
             />
           </div>
         )}
@@ -149,6 +168,7 @@ const EditQrForm = () => {
             value={formData.ubicacion}
             onChange={handleChange}
             required
+            disabled={rol !== "Administrador"}
           >
             <option>Selecciona la ubicación</option>
             {ubicaciones.map((ubicacion) => (
@@ -168,6 +188,7 @@ const EditQrForm = () => {
               value={formData.ubicacionProd}
               onChange={handleChange}
               required
+              disabled={rol !== "Administrador"}
             >
               <option></option>
               {produccion.map((ubicacionProd) => (
@@ -188,6 +209,7 @@ const EditQrForm = () => {
               value={formData.ubicacionAlma}
               onChange={handleChange}
               required
+              disabled={rol !== "Administrador"}
             >
               <option></option>
               {almacen.map((ubicacionAlma) => (
@@ -208,6 +230,7 @@ const EditQrForm = () => {
               value={formData.ubicacionSanita}
               onChange={handleChange}
               required
+              disabled={rol !== "Administrador"}
             >
               <option></option>
               {baños.map((ubicacionSanita) => (
@@ -231,6 +254,7 @@ const EditQrForm = () => {
               value={formData.ubicacionOfi}
               onChange={handleChange}
               required
+              disabled={rol !== "Administrador"}
             >
               <option></option>
               {oficinas.map((ubicacionOfi) => (

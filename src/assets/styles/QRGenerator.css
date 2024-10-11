@@ -156,3 +156,10 @@ select:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
+input[readonly],
+select[disabled] {
+  background-color: #e2e8f0; 
+  color: #6b7280; 
+  cursor: not-allowed;
+}

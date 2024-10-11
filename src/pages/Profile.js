@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../config";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../assets/styles/editProfile.css";
 
 function Profile() {
+  const location = useLocation();
   const navigate = useNavigate();
+  const [rol, setRole] = useState(null);
+
+  useEffect(() => {
+    const currentState = location.state;
+    if (currentState && currentState.rol) {
+      setRole(currentState.rol);
+    } else {
+      const storedRole = localStorage.getItem("rol");
+      setRole(storedRole);
+    }
+  }, [location]); 
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -41,12 +54,12 @@ function Profile() {
       }
     };
 
-    // Verificar si hay un token antes de intentar obtener datos
+    
     if (token) {
       fetchUserData();
     } else {
       alert("Por favor inicia sesión.");
-      navigate("/login"); // Redirigir si no hay token
+      navigate("/login"); 
     }
   }, [token, navigate]);
 
@@ -62,10 +75,10 @@ function Profile() {
 
     const updatedData = { ...formData };
     if (!updatedData.password) {
-      delete updatedData.password; // Eliminar el campo si está vacío
+      delete updatedData.password; 
     }
 
-    console.log("Datos que se envían:", updatedData); // Agregar log para verificar datos
+    console.log("Datos que se envían:", updatedData); 
 
     try {
       const response = await fetch(`${API_BASE_URL}/user/update-profile`, {
@@ -74,7 +87,7 @@ function Profile() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedData), // Enviar los datos actualizados
+        body: JSON.stringify(updatedData), 
       });
 
       if (response.ok) {
@@ -137,6 +150,7 @@ function Profile() {
             name="rol"
             value={formData.rol}
             onChange={handleChange}
+            disabled={rol !== "Administrador"}
           >
             <option value="Empleado">Empleado</option>
             <option value="Administrador">Administrador</option>

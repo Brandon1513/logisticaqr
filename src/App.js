@@ -19,7 +19,7 @@ import EditQR from "./pages/EditQR";
 function App() {
   const location = useLocation();
   const [rol, setRole] = useState(null);
-  const token = localStorage.getItem("token"); // Obtén el token
+  const token = localStorage.getItem("token"); 
 
   useEffect(() => {
     const currentState = location.state;
