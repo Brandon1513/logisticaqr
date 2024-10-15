@@ -163,3 +163,10 @@ select[disabled] {
   color: #6b7280; 
   cursor: not-allowed;
 }
+
+.QRIcon {
+  display: block;
+  margin: 0 auto; 
+  width: 120px; 
+  height: auto;
+}

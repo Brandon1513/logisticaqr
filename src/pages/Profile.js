@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../assets/styles/editProfile.css";
+import UserIcon from "../assets/images/icons/UserProfile.png"
 
 function Profile() {
   const location = useLocation();
@@ -106,7 +107,7 @@ function Profile() {
 
   return (
     <div className="edit-user">
-      <h2>Perfil</h2>
+      <img src={UserIcon} className="UserIcon"/>
       <form onSubmit={handleUpdateProfile} className="edit-user-form">
         <div className="form-group">
           <label htmlFor="username">Nombre</label>

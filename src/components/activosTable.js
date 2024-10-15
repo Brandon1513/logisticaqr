@@ -15,6 +15,10 @@ import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+import * as Fa6Icons from "react-icons/fa6";
+import * as FaIcons from "react-icons/fa";
+import * as MdIcons from "react-icons/md";
+
 const ActivosTable = () => {
   const [qrData, setQrData] = useState([]);
   const [modalData, setModalData] = useState(null);
@@ -271,11 +275,11 @@ const ActivosTable = () => {
       />
       <div className="export-buttons">
         <button onClick={exportToExcel} className="export-excel">
-          Exportar Excel
+          <Fa6Icons.FaFileExcel size={30} color="green" />
         </button>
 
         <button onClick={exportToPDF} className="export-pdf">
-          Exportar PDF
+          <Fa6Icons.FaFilePdf size={30} color="red" />
         </button>
       </div>
 
@@ -302,14 +306,14 @@ const ActivosTable = () => {
               <td>{item.estado}</td>
               <td>
                 <button className="view-button" onClick={() => openModal(item)}>
-                  Ver
+                  <FaIcons.FaRegEye size={20} />
                 </button>
 
                 <button
                   className="edit-button"
                   onClick={() => handleEdit(item)}
                 >
-                  Editar
+                  <FaIcons.FaRegEdit size={20} />
                 </button>
 
                 {rol === "Administrador" && (
@@ -317,7 +321,7 @@ const ActivosTable = () => {
                     className="delete-button"
                     onClick={() => handleDelete(item._id)}
                   >
-                    Eliminar
+                    <MdIcons.MdDeleteOutline size={20} />
                   </button>
                 )}
               </td>

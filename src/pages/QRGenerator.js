@@ -17,6 +17,8 @@ import {
 } from "../assets/Ubicaciones";
 import { API_BASE_URL } from "../config";
 
+import QRIcon from "../assets/images/icons/QRIcon.gif"
+
 function QRForm() {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -175,7 +177,7 @@ function QRForm() {
 
   return (
     <div className="form-container">
-      <h2>Generar Código QR</h2>
+      <img src={QRIcon} className="QRIcon"/>
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre:</label>

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/DataTable.css";
 import { API_BASE_URL } from "../config";
+import * as FaIcons from "react-icons/fa";
+import * as MdIcons from "react-icons/md";
 
 function DataTable() {
   const [users, setUsers] = useState([]);
@@ -92,10 +94,10 @@ function DataTable() {
               <td>{user.departamento}</td>
               <td>
                 <button className="edit-button" onClick={() => handleEdit(user)}>
-                  Editar
+                  <FaIcons.FaRegEdit size={15}/>
                 </button>
                 <button className="delete-button" onClick={() => handleDelete(user._id)}>
-                  Eliminar
+                <MdIcons.MdDeleteOutline size={18} />
                 </button>
               </td>
             </tr>
