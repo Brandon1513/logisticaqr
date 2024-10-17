@@ -11,11 +11,10 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Asegúrate de prevenir el comportamiento por defecto del formulario
+    e.preventDefault();
 
     try {
       const response = await fetch(`${API_BASE_URL}/user/login`, {
-        // Cambia esta URL según tu backend
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,10 +27,9 @@ function Login() {
       if (response.ok) {
         // Guarda el token y el rol en el localStorage o contexto
         localStorage.setItem("token", data.token);
-        localStorage.setItem("rol", data.rol); // Asegúrate de que el rol está directamente en la respuesta
+        localStorage.setItem("rol", data.rol); 
 
-        // Navega a la página principal o a la página correspondiente según el rol
-        navigate("/home"); // O según lo que necesites
+        navigate("/home"); 
       } else {
         // Manejar errores, como mostrar un mensaje de error
         alert(data.message || "Error al iniciar sesión");

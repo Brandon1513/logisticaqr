@@ -16,7 +16,6 @@ import {
   tipoActivo,
 } from "../assets/Ubicaciones";
 import { API_BASE_URL } from "../config";
-
 import QRIcon from "../assets/images/icons/QRIcon.gif"
 
 function QRForm() {
@@ -25,7 +24,7 @@ function QRForm() {
     noSerie: "",
     proveedor: "",
     estado: "Activo",
-    referencia: "Dasavena2024",
+    referencia: "F-ADM-01",
     tipo: "",
     ubicacion: "",
     propietario: "",
@@ -88,7 +87,6 @@ function QRForm() {
     `;
 
     setQrData(qrString.trim());
-    console.log(formData);
   };
 
   const token = localStorage.getItem("token");
@@ -123,7 +121,7 @@ function QRForm() {
       noSerie: "",
       proveedor: "",
       estado: "Activo",
-      referencia: "Dasavena2024",
+      referencia: "F-ADM-01",
       tipo: "",
       ubicacion: "",
       propietario: "",
@@ -137,43 +135,51 @@ function QRForm() {
 
   const handleExport = () => {
     const canvas = qrRef.current.querySelector("canvas");
-
+  
     const exportCanvas = document.createElement("canvas");
     const ctx = exportCanvas.getContext("2d");
-
-    const exportWidth = canvas.width + 10;
-    const exportHeight = canvas.height + 120;
+  
+    const exportWidth = canvas.width + 200; // Añade espacio para el texto a la derecha
+    const exportHeight = canvas.height + 20;
     exportCanvas.width = exportWidth;
     exportCanvas.height = exportHeight;
-
+  
+    // Fondo blanco
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, exportWidth, exportHeight);
-
-    ctx.fillStyle = "black";
-    ctx.font = "bold 20px Arial";
-    ctx.textAlign = "center";
-
-    const title = "Dasavena";
-    const reference = "Referencia";
-
-    const titleYPosition = 30;
-    const referenceYPosition = titleYPosition + 30;
-
-    ctx.fillText(title, exportWidth / 2, titleYPosition);
-    ctx.font = "20px Arial";
-    ctx.fillText(reference, exportWidth / 2, referenceYPosition);
-
-    const qrYPosition = referenceYPosition + 20;
-    const qrXPosition = (exportWidth - canvas.width) / 2;
+  
+    // Posición del código QR
+    const qrYPosition = 10; // Ajuste superior para el QR
+    const qrXPosition = 10; // Deja un margen de 10px desde la izquierda
     ctx.drawImage(canvas, qrXPosition, qrYPosition);
-
+  
+    // Estilo del texto
+    ctx.fillStyle = "black";
+    ctx.font = "bold 30px Arial"; // Título con 30px
+    ctx.textAlign = "left"; // Alineación a la izquierda para que comience en la posición definida
+  
+    const title = "Dasavena";
+    const reference = "F-ADM-01";
+  
+    // Posiciona el texto a la derecha del QR
+    const textXPosition = qrXPosition + canvas.width + 20; // 20px de separación del QR
+    const titleYPosition = qrYPosition + 150; // Posición en línea con el QR
+    const referenceYPosition = titleYPosition + 40;
+  
+    ctx.fillText(title, textXPosition, titleYPosition);
+    ctx.font = "20px Arial"; // Referencia con 20px
+    ctx.fillText(reference, textXPosition, referenceYPosition);
+  
+    // Exporta como imagen PNG
     const exportPngUrl = exportCanvas.toDataURL("image/png");
-
+  
     const downloadLink = document.createElement("a");
     downloadLink.href = exportPngUrl;
     downloadLink.download = `QR_${formData.nombre}_${formData.ubicacion}.png`;
     downloadLink.click();
   };
+  
+  
 
   return (
     <div className="form-container">
