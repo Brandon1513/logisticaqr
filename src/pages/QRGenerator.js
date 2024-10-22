@@ -15,8 +15,9 @@ import {
   oficinasMap,
   tipoActivo,
 } from "../assets/Ubicaciones";
+import DasavenaLogo from "../assets/images/DasavenaLogo.png";
 import { API_BASE_URL } from "../config";
-import QRIcon from "../assets/images/icons/QRIcon.gif"
+import QRIcon from "../assets/images/icons/QRIcon.gif";
 
 function QRForm() {
   const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ function QRForm() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit1 = (e) => {
     e.preventDefault();
 
     const qrString = `
@@ -87,6 +88,49 @@ function QRForm() {
     `;
 
     setQrData(qrString.trim());
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const qrString = [
+      `Nombre - ${formData.nombre.toString()}`,
+      `No. de Serie - ${formData.noSerie.toString()}`,
+      `Proveedor - ${formData.proveedor.toString()}`,
+      `Tipo - ${tipoMap[formData.tipo] || formData.tipo.toString()}`,
+      `Ubicación: ${
+        ubicacionesMap[formData.ubicacion] || formData.ubicacion.toString()
+      }`,
+      formData.propietario
+        ? `Propietario - ${formData.propietario.toString()}`
+        : "",
+      formData.ubicacionProd
+        ? `Producción - ${
+            produccionMap[formData.ubicacionProd] ||
+            formData.ubicacionProd.toString()
+          }`
+        : "",
+      formData.ubicacionAlma
+        ? `Almacén - ${
+            almacenMap[formData.ubicacionAlma] ||
+            formData.ubicacionAlma.toString()
+          }`
+        : "",
+      formData.ubicacionSanita
+        ? `Sanitario - ${
+            sanitariosMap[formData.ubicacionSanita] ||
+            formData.ubicacionSanita.toString()
+          }`
+        : "",
+      formData.ubicacionOfi
+        ? `Oficina - ${
+            oficinasMap[formData.ubicacionOfi] ||
+            formData.ubicacionOfi.toString()
+          }`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    setQrData(qrString);
   };
 
   const token = localStorage.getItem("token");
@@ -135,55 +179,52 @@ function QRForm() {
 
   const handleExport = () => {
     const canvas = qrRef.current.querySelector("canvas");
-  
+
     const exportCanvas = document.createElement("canvas");
     const ctx = exportCanvas.getContext("2d");
-  
-    const exportWidth = canvas.width + 200; // Añade espacio para el texto a la derecha
+
+    const exportWidth = canvas.width + 200;
     const exportHeight = canvas.height + 20;
     exportCanvas.width = exportWidth;
     exportCanvas.height = exportHeight;
-  
+
     // Fondo blanco
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, exportWidth, exportHeight);
-  
+
     // Posición del código QR
-    const qrYPosition = 10; // Ajuste superior para el QR
-    const qrXPosition = 10; // Deja un margen de 10px desde la izquierda
+    const qrYPosition = 10;
+    const qrXPosition = 10;
     ctx.drawImage(canvas, qrXPosition, qrYPosition);
-  
+
     // Estilo del texto
     ctx.fillStyle = "black";
-    ctx.font = "bold 30px Arial"; // Título con 30px
-    ctx.textAlign = "left"; // Alineación a la izquierda para que comience en la posición definida
-  
+    ctx.font = "bold 30px Arial";
+    ctx.textAlign = "left";
+
     const title = "Dasavena";
     const reference = "F-ADM-01";
-  
-    // Posiciona el texto a la derecha del QR
-    const textXPosition = qrXPosition + canvas.width + 20; // 20px de separación del QR
-    const titleYPosition = qrYPosition + 150; // Posición en línea con el QR
+
+    const textXPosition = qrXPosition + canvas.width + 20;
+    const titleYPosition = qrYPosition + 150;
     const referenceYPosition = titleYPosition + 40;
-  
+
     ctx.fillText(title, textXPosition, titleYPosition);
-    ctx.font = "20px Arial"; // Referencia con 20px
+    ctx.font = "20px Arial";
     ctx.fillText(reference, textXPosition, referenceYPosition);
-  
+
     // Exporta como imagen PNG
     const exportPngUrl = exportCanvas.toDataURL("image/png");
-  
+
     const downloadLink = document.createElement("a");
     downloadLink.href = exportPngUrl;
     downloadLink.download = `QR_${formData.nombre}_${formData.ubicacion}.png`;
     downloadLink.click();
   };
-  
-  
 
   return (
     <div className="form-container">
-      <img src={QRIcon} className="QRIcon"/>
+      <img src={QRIcon} className="QRIcon" />
       <form onSubmit={handleSubmit}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre:</label>
@@ -368,7 +409,21 @@ function QRForm() {
         <div className="qr-code-container">
           <h3>Código QR generado:</h3>
           <div className="qr-code" ref={qrRef}>
-            <QRCodeCanvas value={qrData} size={256} />
+            <QRCodeCanvas
+              value={qrData}
+              size={256}
+              level="Q"
+              marginSize={0}
+              imageSettings={{
+                src: DasavenaLogo,
+                x: undefined,
+                y: undefined,
+                height: 150,
+                width: 150,
+                opacity: 1,
+                excavate: false,
+              }}
+            />
           </div>
 
           <div className="qr-data-summary">

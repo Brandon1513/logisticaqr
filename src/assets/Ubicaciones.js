@@ -48,6 +48,7 @@ export const baños = [
 export const oficinas = [
   { value: "administracion", label: "Administración" },
   { value: "operaciones", label: "Operaciones" },
+  { value: "comercial", label: "Comercial" },
 ];
 
 
@@ -105,4 +106,5 @@ export const sanitariosMap = {
 export const oficinasMap = {
   "administracion": "Administración",
   "operaciones": "Operaciones",
+  "comercial": "Comercial",
 };

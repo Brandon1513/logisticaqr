@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { API_BASE_URL } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
-import { QRCodeCanvas } from "qrcode.react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
   tipoMap,
@@ -14,7 +14,7 @@ import {
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
+import DasavenaLogo from "../assets/images/DasavenaLogo.png";
 import * as Fa6Icons from "react-icons/fa6";
 import * as FaIcons from "react-icons/fa";
 import * as MdIcons from "react-icons/md";
@@ -73,84 +73,85 @@ const ActivosTable = () => {
   };
 
   const generateQrString = (data) => {
-    const qrContent = `
-      Nombre: ${data.nombre}\n
-      No. de Serie: ${data.noSerie}\n
-      Proveedor: ${data.proveedor}\n
-      Tipo: ${tipoMap[data.tipo] || data.tipo}\n
-      Ubicación: ${ubicacionesMap[data.ubicacion] || data.ubicacion}\n
-      ${data.propietario ? `Propietario: ${data.propietario}\n` : ""}
-      ${
-        data.ubicacionProd
-          ? `Producción: ${
-              produccionMap[data.ubicacionProd] || data.ubicacionProd
-            }\n`
-          : ""
-      }
-      ${
-        data.ubicacionAlma
-          ? `Almacén: ${almacenMap[data.ubicacionAlma] || data.ubicacionAlma}\n`
-          : ""
-      }
-      ${
-        data.ubicacionSanita
-          ? `Sanitario: ${
-              sanitariosMap[data.ubicacionSanita] || data.ubicacionSanita
-            }\n`
-          : ""
-      }
-      ${
-        data.ubicacionOfi
-          ? `Oficina: ${oficinasMap[data.ubicacionOfi] || data.ubicacionOfi}\n`
-          : ""
-      }
-    `;
-    setQrString(qrContent.trim());
+    const qrContent = [
+      `Nombre - ${data.nombre.toString()}`,
+      `No. de Serie - ${data.noSerie.toString()}`,
+      `Proveedor - ${data.proveedor.toString()}`,
+      `Tipo - ${tipoMap[data.tipo] || data.tipo.toString()}`,
+      `Ubicación: ${
+        ubicacionesMap[data.ubicacion] || data.ubicacion.toString()
+      }`,
+      data.propietario ? `Propietario - ${data.propietario.toString()}` : "",
+      data.ubicacionProd
+        ? `Producción - ${
+            produccionMap[data.ubicacionProd] || data.ubicacionProd.toString()
+          }`
+        : "",
+      data.ubicacionAlma
+        ? `Almacén - ${
+            almacenMap[data.ubicacionAlma] || data.ubicacionAlma.toString()
+          }`
+        : "",
+      data.ubicacionSanita
+        ? `Sanitario - ${
+            sanitariosMap[data.ubicacionSanita] ||
+            data.ubicacionSanita.toString()
+          }`
+        : "",
+      data.ubicacionOfi
+        ? `Oficina - ${
+            oficinasMap[data.ubicacionOfi] || data.ubicacionOfi.toString()
+          }`
+        : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    setQrString(qrContent);
   };
 
   const downloadQR = () => {
     const canvas = qrRef.current.querySelector("canvas");
-  
+
     // Crear un nuevo canvas para la exportación
     const exportCanvas = document.createElement("canvas");
     const ctx = exportCanvas.getContext("2d");
-  
+
     // Definir dimensiones de exportación (añade espacio adicional para el texto)
     const exportWidth = canvas.width + 200; // Añade espacio para el texto a la derecha
     const exportHeight = canvas.height + 20; // Ajusta la altura del canvas según sea necesario
     exportCanvas.width = exportWidth;
     exportCanvas.height = exportHeight;
-  
+
     // Fondo blanco
     ctx.fillStyle = "white";
     ctx.fillRect(0, 0, exportWidth, exportHeight);
-  
+
     // Posicionar el QR a la izquierda
     const qrYPosition = 10; // Ajuste superior para el QR
     const qrXPosition = 10; // Deja un margen de 10px desde la izquierda
     ctx.drawImage(canvas, qrXPosition, qrYPosition);
-  
+
     // Texto del título y referencia
     ctx.fillStyle = "black";
     ctx.font = "bold 30px Arial"; // Título con 30px
     ctx.textAlign = "left"; // Alineación a la izquierda
-  
-    const title = "Dasavena"; 
-    const reference = "F-ADM-01"; 
-  
+
+    const title = "Dasavena";
+    const reference = "F-ADM-01";
+
     // Posiciona el texto a la derecha del QR
     const textXPosition = qrXPosition + canvas.width + 20; // 20px de separación del QR
     const titleYPosition = qrYPosition + 150; // Posición en línea con el QR
     const referenceYPosition = titleYPosition + 40; // Espacio para la referencia
-  
+
     // Dibujar el título y la referencia
     ctx.fillText(title, textXPosition, titleYPosition);
     ctx.font = "20px Arial"; // Referencia con 20px
     ctx.fillText(reference, textXPosition, referenceYPosition);
-  
+
     // Convertir el canvas a URL de imagen PNG
     const exportPngUrl = exportCanvas.toDataURL("image/png");
-  
+
     // Crear enlace de descarga
     const downloadLink = document.createElement("a");
     downloadLink.href = exportPngUrl;
@@ -159,7 +160,6 @@ const ActivosTable = () => {
     downloadLink.click();
     document.body.removeChild(downloadLink);
   };
-  
 
   const handleEdit = (item) => {
     navigate(`/edit-qr/${item._id}`, { state: { activo: item } });
@@ -416,7 +416,21 @@ const ActivosTable = () => {
 
             {qrString && (
               <div className="qr-code" ref={qrRef}>
-                <QRCodeCanvas value={qrString} size={256} level="H" />
+                <QRCodeCanvas
+                  value={qrString}
+                  size={256}
+                  level="Q"
+                  marginSize={0}
+                  imageSettings={{
+                    src: DasavenaLogo,
+                    x: undefined,
+                    y: undefined,
+                    height: 150,
+                    width:150,
+                    opacity: 1,
+                    excavate: false,
+                  }}
+                />
               </div>
             )}
 
