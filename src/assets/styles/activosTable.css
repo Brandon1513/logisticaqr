@@ -196,4 +196,41 @@
     width: 35px; 
     height: auto;
   }
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .button-pages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    margin: 0 10px;
+    border: none;
+    border-radius: 50%;
+    background-color: #0201165b;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button-pages:hover {
+    background-color: #374151;
+  }
+  
+  .button-pages:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .pagination-controls span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2a3443;
+  }
+  
   

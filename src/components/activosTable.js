@@ -208,6 +208,25 @@ const ActivosTable = () => {
       item.estado.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 20;
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = filteredData.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   const exportToExcel = () => {
     const headers = [
       "Nombre",
@@ -300,7 +319,7 @@ const ActivosTable = () => {
           </tr>
         </thead>
         <tbody>
-          {filteredData.map((item) => (
+          {currentRows.map((item) => (
             <tr key={item._id}>
               <td>{item.nombre}</td>
               <td>{item.noSerie}</td>
@@ -333,6 +352,18 @@ const ActivosTable = () => {
           ))}
         </tbody>
       </table>
+
+      <div className="pagination-controls">
+        <button className="button-pages" onClick={handlePrevPage} disabled={currentPage === 1}>
+          <FaIcons.FaAngleLeft size={22} color="#FFF"/>
+        </button>
+        <span>
+          {currentPage} de {totalPages}
+        </span>
+        <button className="button-pages" onClick={handleNextPage} disabled={currentPage === totalPages}>
+          <FaIcons.FaAngleRight size={22} color="#FFF"/>
+        </button>
+      </div>
 
       {isModalOpen && modalData && (
         <div className="modal-overlay">
@@ -426,7 +457,7 @@ const ActivosTable = () => {
                     x: undefined,
                     y: undefined,
                     height: 150,
-                    width:150,
+                    width: 150,
                     opacity: 1,
                     excavate: false,
                   }}
