@@ -1,35 +1,32 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { API_BASE_URL } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
-import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import "../assets/styles/activosTable.css";
 import {
   tipoMap,
   ubicacionesMap,
-  produccionMap,
-  almacenMap,
-  sanitariosMap,
-  oficinasMap,
 } from "../assets/Ubicaciones";
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import "jspdf-autotable";
-import DasavenaLogo from "../assets/images/DasavenaLogo.png";
 import * as Fa6Icons from "react-icons/fa6";
 import * as FaIcons from "react-icons/fa";
 import * as MdIcons from "react-icons/md";
+import { generateQrString, downloadQR } from "../utils/qrFunctions/exportQrFunction";
+import { exportToExcel, exportToPDF } from "../utils/qrFunctions/exportTableFunction";
+import { deleteQRCode } from "../utils/qrFunctions/activosTableUtils";
+import QrModalData from "./QrModalData";
 
 const ActivosTable = () => {
   const [qrData, setQrData] = useState([]);
   const [modalData, setModalData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrString, setQrString] = useState("");
-  const qrRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const location = useLocation();
   const [rol, setRole] = useState(null);
+  const token = localStorage.getItem("token");
 
+
+  //Localiza el rol del usuario
   useEffect(() => {
     const currentState = location.state;
     if (currentState && currentState.rol) {
@@ -40,13 +37,13 @@ const ActivosTable = () => {
     }
   }, [location]);
 
+  //Recibe los datos de la base de datos para su organización en la tabla
   useEffect(() => {
     const fetchQrData = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/qr/qr-data`);
         const data = await response.json();
 
-        console.log("Datos recibidos de la API:", data);
         if (Array.isArray(data)) {
           setQrData(data);
         } else {
@@ -61,141 +58,46 @@ const ActivosTable = () => {
     fetchQrData();
   }, []);
 
+  //Abre y cierra el modal donde podemos generar el QR
   const openModal = (item) => {
     setModalData(item);
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setModalData(null);
     setIsModalOpen(false);
     setQrString("");
   };
 
-  const generateQrString = (data) => {
-    const qrContent = [
-      `Nombre - ${data.nombre.toString()}`,
-      `No. de Serie - ${data.noSerie.toString()}`,
-      `Proveedor - ${data.proveedor.toString()}`,
-      `Tipo - ${tipoMap[data.tipo] || data.tipo.toString()}`,
-      `Ubicación: ${
-        ubicacionesMap[data.ubicacion] || data.ubicacion.toString()
-      }`,
-      data.propietario ? `Propietario - ${data.propietario.toString()}` : "",
-      data.ubicacionProd
-        ? `Producción - ${
-            produccionMap[data.ubicacionProd] || data.ubicacionProd.toString()
-          }`
-        : "",
-      data.ubicacionAlma
-        ? `Almacén - ${
-            almacenMap[data.ubicacionAlma] || data.ubicacionAlma.toString()
-          }`
-        : "",
-      data.ubicacionSanita
-        ? `Sanitario - ${
-            sanitariosMap[data.ubicacionSanita] ||
-            data.ubicacionSanita.toString()
-          }`
-        : "",
-      data.ubicacionOfi
-        ? `Oficina - ${
-            oficinasMap[data.ubicacionOfi] || data.ubicacionOfi.toString()
-          }`
-        : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-    setQrString(qrContent);
+  //Descarga el QR con el diseño
+  const handleDownloadQr = (qrRef, modalData) => {
+    if (qrRef.current) {
+      downloadQR(qrRef, modalData);
+    } else {
+      console.error("El QR no está disponible para descargar");
+    }
   };
+  
 
-  const downloadQR = () => {
-    const canvas = qrRef.current.querySelector("canvas");
-
-    // Crear un nuevo canvas para la exportación
-    const exportCanvas = document.createElement("canvas");
-    const ctx = exportCanvas.getContext("2d");
-
-    // Definir dimensiones de exportación (añade espacio adicional para el texto)
-    const exportWidth = canvas.width + 200; // Añade espacio para el texto a la derecha
-    const exportHeight = canvas.height + 20; // Ajusta la altura del canvas según sea necesario
-    exportCanvas.width = exportWidth;
-    exportCanvas.height = exportHeight;
-
-    // Fondo blanco
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, exportWidth, exportHeight);
-
-    // Posicionar el QR a la izquierda
-    const qrYPosition = 10; // Ajuste superior para el QR
-    const qrXPosition = 10; // Deja un margen de 10px desde la izquierda
-    ctx.drawImage(canvas, qrXPosition, qrYPosition);
-
-    // Texto del título y referencia
-    ctx.fillStyle = "black";
-    ctx.font = "bold 30px Arial"; // Título con 30px
-    ctx.textAlign = "left"; // Alineación a la izquierda
-
-    const title = "Dasavena";
-    const reference = "F-ADM-01";
-
-    // Posiciona el texto a la derecha del QR
-    const textXPosition = qrXPosition + canvas.width + 20; // 20px de separación del QR
-    const titleYPosition = qrYPosition + 150; // Posición en línea con el QR
-    const referenceYPosition = titleYPosition + 40; // Espacio para la referencia
-
-    // Dibujar el título y la referencia
-    ctx.fillText(title, textXPosition, titleYPosition);
-    ctx.font = "20px Arial"; // Referencia con 20px
-    ctx.fillText(reference, textXPosition, referenceYPosition);
-
-    // Convertir el canvas a URL de imagen PNG
-    const exportPngUrl = exportCanvas.toDataURL("image/png");
-
-    // Crear enlace de descarga
-    const downloadLink = document.createElement("a");
-    downloadLink.href = exportPngUrl;
-    downloadLink.download = `QR_${modalData.nombre}_${modalData.ubicacion}.png`;
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  };
-
+  //Abre la ventana para editar los datos enviando el id
   const handleEdit = (item) => {
     navigate(`/edit-qr/${item._id}`, { state: { activo: item } });
   };
 
-  const token = localStorage.getItem("token");
+  //Elimina los datos con el parametro id
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "¿Estás seguro de que deseas eliminar este QR?"
-    );
-    if (!confirmDelete) return;
-
-    try {
-      const response = await fetch(`${API_BASE_URL}/qr/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        alert("Activo eliminado correctamente");
-        setQrData(qrData.filter((item) => item._id !== id));
-      } else {
-        alert("Error al eliminar el Activo");
-      }
-    } catch (error) {
-      console.error("Error eliminando QR:", error);
-      alert("Hubo un error al intentar eliminar el Activo");
+    const newQrData = await deleteQRCode(id,token,qrData, setQrData);
+    if(newQrData) {
+      setQrData(newQrData);
     }
-  };
-
+  }
+  
+  //Funcionamiento de la barra de busqueda para filtrado de datos
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value); // Actualizar el término de búsqueda
+    setSearchTerm(e.target.value);
   };
 
+  //Creación de objeto de datos filtrados para su exportación
   const filteredData = qrData.filter(
     (item) =>
       item.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -208,6 +110,15 @@ const ActivosTable = () => {
       item.estado.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  //Botones de Exportacion Excel y PDF
+  const handleExportToExcel = () => {
+    exportToExcel(filteredData);
+  };
+  const handleExportToPDF = () => {
+    exportToPDF(filteredData);
+  };
+
+  //Constantes y funciones para la paginacion de la tabla
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPerPage = 20;
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -220,69 +131,10 @@ const ActivosTable = () => {
       setCurrentPage(currentPage + 1);
     }
   };
-
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
-  };
-
-  const exportToExcel = () => {
-    const headers = [
-      "Nombre",
-      "No. de Serie",
-      "Proveedor",
-      "Tipo",
-      "Ubicación",
-      "Estado",
-    ];
-    const rows = filteredData.map((item) => [
-      item.nombre,
-      item.noSerie,
-      item.proveedor,
-      tipoMap[item.tipo] || item.tipo,
-      ubicacionesMap[item.ubicacion] || item.ubicacion,
-      item.estado,
-    ]);
-
-    const worksheet = XLSX.utils.aoa_to_sheet([headers, ...rows]);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Activos Filtrados");
-
-    XLSX.writeFile(workbook, "activos_filtrados.xlsx");
-  };
-
-  const exportToPDF = () => {
-    const doc = new jsPDF();
-
-    const tableColumn = [
-      "Nombre",
-      "No. de Serie",
-      "Proveedor",
-      "Tipo",
-      "Ubicación",
-      "Estado",
-    ];
-    const tableRows = [];
-
-    filteredData.forEach((item) => {
-      const rowData = [
-        item.nombre,
-        item.noSerie,
-        item.proveedor,
-        item.tipo,
-        item.ubicacion,
-        item.estado,
-      ];
-      tableRows.push(rowData);
-    });
-
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-    });
-
-    doc.save("activos_filtrados.pdf");
   };
 
   return (
@@ -297,11 +149,11 @@ const ActivosTable = () => {
         className="search-bar"
       />
       <div className="export-buttons">
-        <button onClick={exportToExcel} className="export-excel">
+        <button onClick={handleExportToExcel} className="export-excel">
           <Fa6Icons.FaFileExcel size={30} color="green" />
         </button>
 
-        <button onClick={exportToPDF} className="export-pdf">
+        <button onClick={handleExportToPDF} className="export-pdf">
           <Fa6Icons.FaFilePdf size={30} color="red" />
         </button>
       </div>
@@ -354,127 +206,36 @@ const ActivosTable = () => {
       </table>
 
       <div className="pagination-controls">
-        <button className="button-pages" onClick={handlePrevPage} disabled={currentPage === 1}>
-          <FaIcons.FaAngleLeft size={22} color="#FFF"/>
+        <button
+          className="button-pages"
+          onClick={handlePrevPage}
+          disabled={currentPage === 1}
+        >
+          <FaIcons.FaAngleLeft size={22} color="#FFF" />
         </button>
         <span>
           {currentPage} de {totalPages}
         </span>
-        <button className="button-pages" onClick={handleNextPage} disabled={currentPage === totalPages}>
-          <FaIcons.FaAngleRight size={22} color="#FFF"/>
+        <button
+          className="button-pages"
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages}
+        >
+          <FaIcons.FaAngleRight size={22} color="#FFF" />
         </button>
       </div>
+      
+      <QrModalData
+        isOpen={isModalOpen}
+        modalData={modalData}
+        qrString={qrString}
+        setQrString={setQrString}
+        generateQrString={generateQrString}
+        closeModal={closeModal}
+        handleDownloadQr={handleDownloadQr}
+      />
 
-      {isModalOpen && modalData && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Detalles del QR</h3>
-
-            <p>
-              <strong>ID:</strong> {modalData._id}
-            </p>
-            <p>
-              <strong>Nombre:</strong> {modalData.nombre}
-            </p>
-            <p>
-              <strong>No. de Serie:</strong> {modalData.noSerie}
-            </p>
-            <p>
-              <strong>Proveedor:</strong> {modalData.proveedor}
-            </p>
-            <p>
-              <strong>Tipo:</strong> {tipoMap[modalData.tipo] || modalData.tipo}
-            </p>
-
-            {modalData.propietario && (
-              <p>
-                <strong>Propietario:</strong> {modalData.propietario}
-              </p>
-            )}
-            <p>
-              <strong>Ubicación:</strong>{" "}
-              {ubicacionesMap[modalData.ubicacion] || modalData.ubicacion}
-            </p>
-
-            {modalData.ubicacionProd && (
-              <p>
-                <strong>Producción:</strong>{" "}
-                {produccionMap[modalData.ubicacionProd] ||
-                  modalData.ubicacionProd}
-              </p>
-            )}
-
-            {modalData.ubicacionAlma && (
-              <p>
-                <strong>Almacén:</strong>{" "}
-                {almacenMap[modalData.ubicacionAlma] || modalData.ubicacionAlma}
-              </p>
-            )}
-
-            {modalData.ubicacionSanita && (
-              <p>
-                <strong>Sanitario:</strong>{" "}
-                {sanitariosMap[modalData.ubicacionSanita] ||
-                  modalData.ubicacionSanita}
-              </p>
-            )}
-
-            {modalData.ubicacionOfi && (
-              <p>
-                <strong>Oficina:</strong>{" "}
-                {oficinasMap[modalData.ubicacionOfi] || modalData.ubicacionOfi}
-              </p>
-            )}
-
-            <p>
-              <strong>Referencia:</strong> {modalData.referencia}
-            </p>
-            <p>
-              <strong>Estado:</strong> {modalData.estado}
-            </p>
-
-            <div className="modal-buttons">
-              <button
-                className="generate-qr-button"
-                onClick={() => generateQrString(modalData)}
-              >
-                Generar QR
-              </button>
-              <button className="close-button" onClick={closeModal}>
-                Cerrar
-              </button>
-            </div>
-
-            {qrString && (
-              <div className="qr-code" ref={qrRef}>
-                <QRCodeCanvas
-                  value={qrString}
-                  size={256}
-                  level="Q"
-                  marginSize={0}
-                  imageSettings={{
-                    src: DasavenaLogo,
-                    x: undefined,
-                    y: undefined,
-                    height: 150,
-                    width: 150,
-                    opacity: 1,
-                    excavate: false,
-                  }}
-                />
-              </div>
-            )}
-
-            {qrString && (
-              <div className="export-qr">
-                <button className="export-button" onClick={downloadQR}>
-                  Exportar QR a PNG
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };
