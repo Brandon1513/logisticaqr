@@ -8,14 +8,16 @@ import {
   tipoActivo,
 } from "../assets/Ubicaciones";
 import { useLocation, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../config";
+import { updateQrData } from "../utils/qrFunctions/qrUtils";
 
 const EditQrForm = () => {
   const location = useLocation();
   const [formData, setFormData] = useState({});
   const navigate = useNavigate();
   const [rol, setRole] = useState(null);
+  const token = localStorage.getItem("token");
 
+  //Busca el rol del usuario guardado en las sesión
   useEffect(() => {
     const currentState = location.state;
     if (currentState && currentState.rol) {
@@ -30,50 +32,29 @@ const EditQrForm = () => {
     return location.state?.activo || {};
   }, [location.state?.activo]);
 
+  //Incializa el formulario con la información del activo seleccionado
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     }
   }, [initialData]);
 
+  //Maneja los cambios realizados en el formulario para despues ser enviado
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const token = localStorage.getItem("token");
-  const handleSubmit = async (e) => {
+  //Guarda los cambios realizados en el formulario
+  const handleUpdateQR = async (e) =>{
     e.preventDefault();
-
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/qr/update/${formData._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Error actualizando el QR");
-      }
-
-      alert("QR actualizado correctamente");
-      navigate("/datatable");
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error actualizando el QR");
-    }
-  };
+    await updateQrData(formData, token, navigate)
+  }
 
   return (
     <div className="form-container">
       <h2>Editar Activo</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleUpdateQR}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre:</label>
           <input

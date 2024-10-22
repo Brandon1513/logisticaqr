@@ -16,10 +16,16 @@ import {
   tipoActivo,
 } from "../assets/Ubicaciones";
 import DasavenaLogo from "../assets/images/DasavenaLogo.png";
-import { API_BASE_URL } from "../config";
 import QRIcon from "../assets/images/icons/QRIcon.gif";
+import { generateQrString, downloadQR } from "../utils/qrFunctions/exportQrFunction";
+import { saveQRData } from "../utils/qrFunctions/qrUtils";
 
 function QRForm() {
+  const [qrData, setQrData] = useState("");
+  const qrRef = useRef();
+  const token = localStorage.getItem("token");
+
+  //Generación del objeto local del formulario
   const [formData, setFormData] = useState({
     nombre: "",
     noSerie: "",
@@ -34,131 +40,35 @@ function QRForm() {
     ubicacionSanita: "",
     ubicacionOfi: "",
   });
-  const [qrData, setQrData] = useState("");
-  const qrRef = useRef();
-
+  
+  //Función que controla los cambios del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit1 = (e) => {
+  //Genera el codigo Qr una vez que llenemos el formulario
+  const handleGenerateQr = (e) => {
     e.preventDefault();
+    const qrContent = generateQrString(formData);
+    setQrData(qrContent);
+  }
 
-    const qrString = `
-      Nombre: ${formData.nombre}\n
-      No. de Serie: ${formData.noSerie}\n
-      Proveedor: ${formData.proveedor}\n
-      Tipo: ${tipoMap[formData.tipo] || formData.tipo}\n
-      ${
-        formData.tipo === "equipo-computo"
-          ? `Propietario: ${formData.propietario}\n`
-          : ""
-      }
-      Ubicación: ${ubicacionesMap[formData.ubicacion] || formData.ubicacion}\n
-      ${
-        formData.ubicacion === "produccion"
-          ? `Producción: ${
-              produccionMap[formData.ubicacionProd] || formData.ubicacionProd
-            }\n`
-          : ""
-      }
-      ${
-        formData.ubicacion === "almacen"
-          ? `Almacén: ${
-              almacenMap[formData.ubicacionAlma] || formData.ubicacionAlma
-            }\n`
-          : ""
-      }
-      ${
-        formData.ubicacion === "sanitario"
-          ? `Sanitario: ${
-              sanitariosMap[formData.ubicacionSanita] ||
-              formData.ubicacionSanita
-            }\n`
-          : ""
-      }
-      ${
-        formData.ubicacion === "oficinas"
-          ? `Oficina: ${
-              oficinasMap[formData.ubicacionOfi] || formData.ubicacionOfi
-            }\n`
-          : ""
-      }
-    `;
+  //Guardar el formulario dentro de la base de datos
+  const handleSaveQr = () => {
+    saveQRData(formData, qrData, token);
+  }
 
-    setQrData(qrString.trim());
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const qrString = [
-      `Nombre - ${formData.nombre.toString()}`,
-      `No. de Serie - ${formData.noSerie.toString()}`,
-      `Proveedor - ${formData.proveedor.toString()}`,
-      `Tipo - ${tipoMap[formData.tipo] || formData.tipo.toString()}`,
-      `Ubicación: ${
-        ubicacionesMap[formData.ubicacion] || formData.ubicacion.toString()
-      }`,
-      formData.propietario
-        ? `Propietario - ${formData.propietario.toString()}`
-        : "",
-      formData.ubicacionProd
-        ? `Producción - ${
-            produccionMap[formData.ubicacionProd] ||
-            formData.ubicacionProd.toString()
-          }`
-        : "",
-      formData.ubicacionAlma
-        ? `Almacén - ${
-            almacenMap[formData.ubicacionAlma] ||
-            formData.ubicacionAlma.toString()
-          }`
-        : "",
-      formData.ubicacionSanita
-        ? `Sanitario - ${
-            sanitariosMap[formData.ubicacionSanita] ||
-            formData.ubicacionSanita.toString()
-          }`
-        : "",
-      formData.ubicacionOfi
-        ? `Oficina - ${
-            oficinasMap[formData.ubicacionOfi] ||
-            formData.ubicacionOfi.toString()
-          }`
-        : "",
-    ]
-      .filter(Boolean)
-      .join("\n");
-    setQrData(qrString);
-  };
-
-  const token = localStorage.getItem("token");
-
-  const handleSave = async () => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/qr/save-qr`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...formData,
-          qrData,
-        }),
-      });
-
-      if (response.ok) {
-        alert("Datos guardados correctamente.");
-      } else {
-        alert("Error al guardar los datos.");
-      }
-    } catch (error) {
-      console.error("Error al guardar los datos:", error);
+  //Descarga el QR con el diseño
+  const handleDownloadQr = (qrRef, modalData) => {
+    if (qrRef.current) {
+      downloadQR(qrRef, modalData);
+    } else {
+      console.error("El QR no está disponible para descargar");
     }
   };
 
+  //Limpiar campos del formulario
   const handleClear = () => {
     setFormData({
       nombre: "",
@@ -177,55 +87,10 @@ function QRForm() {
     setQrData("");
   };
 
-  const handleExport = () => {
-    const canvas = qrRef.current.querySelector("canvas");
-
-    const exportCanvas = document.createElement("canvas");
-    const ctx = exportCanvas.getContext("2d");
-
-    const exportWidth = canvas.width + 200;
-    const exportHeight = canvas.height + 20;
-    exportCanvas.width = exportWidth;
-    exportCanvas.height = exportHeight;
-
-    // Fondo blanco
-    ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, exportWidth, exportHeight);
-
-    // Posición del código QR
-    const qrYPosition = 10;
-    const qrXPosition = 10;
-    ctx.drawImage(canvas, qrXPosition, qrYPosition);
-
-    // Estilo del texto
-    ctx.fillStyle = "black";
-    ctx.font = "bold 30px Arial";
-    ctx.textAlign = "left";
-
-    const title = "Dasavena";
-    const reference = "F-ADM-01";
-
-    const textXPosition = qrXPosition + canvas.width + 20;
-    const titleYPosition = qrYPosition + 150;
-    const referenceYPosition = titleYPosition + 40;
-
-    ctx.fillText(title, textXPosition, titleYPosition);
-    ctx.font = "20px Arial";
-    ctx.fillText(reference, textXPosition, referenceYPosition);
-
-    // Exporta como imagen PNG
-    const exportPngUrl = exportCanvas.toDataURL("image/png");
-
-    const downloadLink = document.createElement("a");
-    downloadLink.href = exportPngUrl;
-    downloadLink.download = `QR_${formData.nombre}_${formData.ubicacion}.png`;
-    downloadLink.click();
-  };
-
   return (
     <div className="form-container">
       <img src={QRIcon} className="QRIcon" />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleGenerateQr}>
         <div className="input-group">
           <label htmlFor="nombre">Nombre:</label>
           <input
@@ -483,11 +348,11 @@ function QRForm() {
           </div>
 
           <div className="save-group">
-            <button className="export-button" onClick={handleExport}>
+            <button className="export-button-form" onClick={() => handleDownloadQr(qrRef,formData)}>
               Exportar QR como PNG
             </button>
 
-            <button type="button" className="save-button" onClick={handleSave}>
+            <button type="button" className="save-button" onClick={handleSaveQr}>
               Guardar
             </button>
           </div>

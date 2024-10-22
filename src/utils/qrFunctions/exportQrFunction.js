@@ -7,7 +7,7 @@ import {
   oficinasMap,
 } from "../../assets/Ubicaciones";
 
-export const generateQrString = (qrData) => {
+export const generateQrString = (qrData, e) => {
   const qrContent = [
     `Nombre - ${qrData.nombre.toString()}`,
     `No. de Serie - ${qrData.noSerie.toString()}`,

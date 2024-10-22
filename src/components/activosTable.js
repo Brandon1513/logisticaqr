@@ -11,7 +11,7 @@ import * as FaIcons from "react-icons/fa";
 import * as MdIcons from "react-icons/md";
 import { generateQrString, downloadQR } from "../utils/qrFunctions/exportQrFunction";
 import { exportToExcel, exportToPDF } from "../utils/qrFunctions/exportTableFunction";
-import { deleteQRCode } from "../utils/qrFunctions/activosTableUtils";
+import { deleteQRCode } from "../utils/qrFunctions/qrUtils";
 import QrModalData from "./QrModalData";
 
 const ActivosTable = () => {
@@ -69,7 +69,7 @@ const ActivosTable = () => {
     setQrString("");
   };
 
-  //Descarga el QR con el diseño
+  //Descarga el QR con el diseño en formato png
   const handleDownloadQr = (qrRef, modalData) => {
     if (qrRef.current) {
       downloadQR(qrRef, modalData);
