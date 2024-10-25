@@ -32,6 +32,7 @@ export const produccion = [
   { value: "Formado de barras", label: "Formado Barras" },
   { value: "hornos", label: "Hornos" },
   { value: "mezclado", label: "Mezclado" },
+  { value: "lavado", label: "Lavado"}
 ];
 
 export const almacen = [
@@ -90,6 +91,7 @@ export const produccionMap = {
   "formado de barras": "Formado Barras",
   "hornos": "Hornos",
   "mezclado": "Mezclado",
+  "lavado": "Lavado"
 };
 
 export const almacenMap = {

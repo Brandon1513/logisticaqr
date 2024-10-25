@@ -136,7 +136,12 @@ const ActivosTable = () => {
       setCurrentPage(currentPage - 1);
     }
   };
-
+  const handleFirstPage = () => {
+    setCurrentPage(1);
+  }
+  const handleLastPage = () => {
+    setCurrentPage(totalPages);
+  }
   return (
     <div>
       <h2>Activos Dasavena</h2>
@@ -206,12 +211,19 @@ const ActivosTable = () => {
       </table>
 
       <div className="pagination-controls">
+      <button
+          className="button-pages"
+          onClick={handleFirstPage}
+          disabled={currentPage === 1}
+        >
+          <FaIcons.FaAngleDoubleLeft size={20} color="#FFF" />
+        </button>
         <button
           className="button-pages"
           onClick={handlePrevPage}
           disabled={currentPage === 1}
         >
-          <FaIcons.FaAngleLeft size={22} color="#FFF" />
+          <FaIcons.FaAngleLeft size={23} color="#FFF" />
         </button>
         <span>
           {currentPage} de {totalPages}
@@ -221,7 +233,14 @@ const ActivosTable = () => {
           onClick={handleNextPage}
           disabled={currentPage === totalPages}
         >
-          <FaIcons.FaAngleRight size={22} color="#FFF" />
+          <FaIcons.FaAngleRight size={23} color="#FFF" />
+        </button>
+        <button
+          className="button-pages"
+          onClick={handleLastPage}
+          disabled={currentPage === totalPages}
+        >
+          <FaIcons.FaAngleDoubleRight size={20} color="#FFF" />
         </button>
       </div>
       
