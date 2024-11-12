@@ -21,9 +21,8 @@ export const tipoActivo = [
   { value: "maquinaria-industrial", label: "Maquinaria y Equipo Industrial" },
   { value: "mobiliario", label: "Mobiliario" },
   { value: "obras-infraestructura", label: "Obras de Infraestructura" },
-  { value: "transporte", label: "Transporte" }
+  { value: "transporte", label: "Transporte" },
 ];
-
 
 export const produccion = [
   { value: "aduana", label: "Aduana" },
@@ -32,7 +31,7 @@ export const produccion = [
   { value: "Formado de barras", label: "Formado Barras" },
   { value: "hornos", label: "Hornos" },
   { value: "mezclado", label: "Mezclado" },
-  { value: "lavado", label: "Lavado"}
+  { value: "lavado", label: "Lavado" },
 ];
 
 export const almacen = [
@@ -52,61 +51,57 @@ export const oficinas = [
   { value: "comercial", label: "Comercial" },
 ];
 
-
-
 //Mapeo de variables para mostrar en frontend
 export const tipoMap = {
-  "edificios": "Edificios",
+  edificios: "Edificios",
   "equipo-computo": "Equipo de Cómputo",
   "equipo-medico": "Equipo Médico",
   "equipo-oficina": "Equipo de Oficina",
-  "herramientas": "Herramientas",
-  "instalaciones": "Instalaciones",
+  herramientas: "Herramientas",
+  instalaciones: "Instalaciones",
   "maquinaria-industrial": "Maquinaria y Equipo Industrial",
-  "mobiliario": "Mobiliario",
+  mobiliario: "Mobiliario",
   "obras-infraestructura": "Obras de Infraestructura",
-  "transporte": "Transporte"
+  transporte: "Transporte",
 };
 
-
 export const ubicacionesMap = {
-    "almacen": "Almacén",
-    "comedor": "Comedor",
-    "cocineta": "Cocineta",
-    "cuarto-hidro": "Cuarto Hidroneumático",
-    "enfermeria": "Enfermería",
-    "instalaciones": "Instalaciones",
-    "oficinas": "Oficinas",
-    "produccion": "Producción",
-    "recepcion": "Recepción",
-    "sanitario": "Sanitario",
-    "taller-mantenimiento": "Taller de Mantenimiento",
-  };
-  
+  almacen: "Almacén",
+  comedor: "Comedor",
+  cocineta: "Cocineta",
+  "cuarto-hidro": "Cuarto Hidroneumático",
+  enfermeria: "Enfermería",
+  instalaciones: "Instalaciones",
+  oficinas: "Oficinas",
+  produccion: "Producción",
+  recepcion: "Recepción",
+  sanitario: "Sanitario",
+  "taller-mantenimiento": "Taller de Mantenimiento",
+};
 
 export const produccionMap = {
-  "aduana": "Aduana",
-  "envasado": "Envasado",
+  aduana: "Aduana",
+  envasado: "Envasado",
   "envasado-barras": "Envasado Barras",
   "formado de barras": "Formado Barras",
-  "hornos": "Hornos",
-  "mezclado": "Mezclado",
-  "lavado": "Lavado"
+  hornos: "Hornos",
+  mezclado: "Mezclado",
+  lavado: "Lavado",
 };
 
 export const almacenMap = {
   "materia-prima": "Materia Prima",
   "producto-terminado": "Producto Terminado",
-  "laboratorio": "Laboratorio",
+  laboratorio: "Laboratorio",
 };
 
 export const sanitariosMap = {
-  "oficinas": "Oficinas",
-  "produccion": "Producción",
+  oficinas: "Oficinas",
+  produccion: "Producción",
 };
 
 export const oficinasMap = {
-  "administracion": "Administración",
-  "operaciones": "Operaciones",
-  "comercial": "Comercial",
+  administracion: "Administración",
+  operaciones: "Operaciones",
+  comercial: "Comercial",
 };

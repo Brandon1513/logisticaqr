@@ -29,7 +29,8 @@ export const generateQrString = (qrData, e) => {
       : "",
     qrData.ubicacionSanita
       ? `Sanitario - ${
-          sanitariosMap[qrData.ubicacionSanita] || qrData.ubicacionSanita.toString()
+          sanitariosMap[qrData.ubicacionSanita] ||
+          qrData.ubicacionSanita.toString()
         }`
       : "",
     qrData.ubicacionOfi
@@ -43,7 +44,6 @@ export const generateQrString = (qrData, e) => {
 
   return qrContent;
 };
-
 
 export const downloadQR = (qrRef, qrModalData) => {
   const canvas = qrRef.current.querySelector("canvas");
@@ -90,4 +90,3 @@ export const downloadQR = (qrRef, qrModalData) => {
   downloadLink.click();
   document.body.removeChild(downloadLink);
 };
-

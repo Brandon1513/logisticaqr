@@ -1,10 +1,7 @@
 import * as XLSX from "xlsx";
-import {
-    tipoMap,
-    ubicacionesMap,
-  } from "../../assets/Ubicaciones";
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { tipoMap, ubicacionesMap } from "../../assets/Ubicaciones";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 export const exportToExcel = (filteredData) => {
   const headers = [
@@ -31,37 +28,35 @@ export const exportToExcel = (filteredData) => {
   XLSX.writeFile(workbook, "activos_filtrados.xlsx");
 };
 
-
 export const exportToPDF = (filteredData) => {
-    const doc = new jsPDF();
-  
-    const tableColumn = [
-      "Nombre",
-      "No. de Serie",
-      "Proveedor",
-      "Tipo",
-      "Ubicación",
-      "Estado",
+  const doc = new jsPDF();
+
+  const tableColumn = [
+    "Nombre",
+    "No. de Serie",
+    "Proveedor",
+    "Tipo",
+    "Ubicación",
+    "Estado",
+  ];
+  const tableRows = [];
+
+  filteredData.forEach((item) => {
+    const rowData = [
+      item.nombre,
+      item.noSerie,
+      item.proveedor,
+      tipoMap[item.tipo] || item.tipo,
+      ubicacionesMap[item.ubicacion] || item.ubicacion,
+      item.estado,
     ];
-    const tableRows = [];
-  
-    filteredData.forEach((item) => {
-      const rowData = [
-        item.nombre,
-        item.noSerie,
-        item.proveedor,
-        tipoMap[item.tipo] || item.tipo,
-        ubicacionesMap[item.ubicacion] || item.ubicacion,
-        item.estado,
-      ];
-      tableRows.push(rowData);
-    });
-  
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-    });
-  
-    doc.save("activos_filtrados.pdf");
-  };
-  
+    tableRows.push(rowData);
+  });
+
+  doc.autoTable({
+    head: [tableColumn],
+    body: tableRows,
+  });
+
+  doc.save("activos_filtrados.pdf");
+};

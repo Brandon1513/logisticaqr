@@ -1,10 +1,10 @@
 import React from "react";
 import ActivosTable from "../components/activosTable";
-import "../assets/styles/ManageUser.css";
+import "../assets/styles/activosTable.css";
 
 function ConsultaActivos() {
   return (
-    <div className="manage-users">
+    <div className="manage-activos">
       <div className="datatable-section">
         <ActivosTable />
       </div>

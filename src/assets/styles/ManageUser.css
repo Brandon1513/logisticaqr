@@ -1,6 +1,10 @@
 .manage-users {
+  justify-content: flex-start;
   padding: 20px;
-  margin-top: 60px;
+  margin-top: 80px;
+  max-width: 1200px; /* Limita el ancho máximo en pantallas grandes */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .header-section {
@@ -18,6 +22,7 @@
   text-decoration: none;
   font-weight: bold;
   cursor: pointer;
+  transition: background-color 0.3s ease; /* Suaviza la transición del color en hover */
 }
 
 .add-user-button:hover {
@@ -26,4 +31,27 @@
 
 .datatable-section {
   margin-top: 20px;
+}
+
+/* Ajustes para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+  .manage-users {
+    padding: 15px;
+    margin-top: 80px;
+  }
+
+  .datatable-section {
+    margin-top: 10px;
+  }
+
+  .header-section {
+    flex-direction: column; /* Cambia la cabecera a un layout en columna */
+    align-items: flex-start; /* Centra los elementos de la cabecera */
+    text-align: center; /* Centra el texto de la cabecera */
+  }
+
+  .add-user-button {
+    font-size: 16px; /* Mantén el texto legible en pantallas pequeñas */
+    text-align: center;
+  }
 }

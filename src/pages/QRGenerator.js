@@ -352,7 +352,7 @@ function QRForm() {
               Exportar QR como PNG
             </button>
 
-            <button type="button" className="save-button" onClick={handleSaveQr}>
+            <button type="button" className="save-button" onClick={() => {handleSaveQr(); handleClear() }}>
               Guardar
             </button>
           </div>

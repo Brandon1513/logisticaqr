@@ -1,56 +1,89 @@
 .header {
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: white;
-    padding: 10px 20px;
-    font-family: Arial, sans-serif;
-    width: 100%; 
-    box-sizing: border-box; 
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    margin-bottom: 100px;
-  }
-  
-  .logo-container {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo {
-    width: 50px; 
-    height: auto;
-    margin-right: 10px;
-  }
-  
-  .logo-text {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2a3443; 
-  }
-  
-  .nav-list {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .nav-list li a {
-    text-decoration: none;
-    color: #2a3443;
-    font-size: 16px;
-    padding: 5px 15px;
-  }
-  
-  .nav-list li a:hover {
-    border-bottom: 2px solid #374151;
-    padding-bottom: 10px;
-    font-weight: bold;
-  }
-  
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 10px 20px;
+  font-family: Arial, sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
 
-  
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  width: 50px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2a3443;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-list li a {
+  text-decoration: none;
+  color: #2a3443;
+  font-size: 16px;
+  padding: 5px 15px;
+}
+
+.nav-list li a:hover {
+  border-bottom: 2px solid #374151;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+/* Hacer el diseño responsivo */
+@media (max-width: 768px) {
+  .nav-list {
+    flex-direction: column; /* Cambiar el menú a columna en pantallas pequeñas */
+    gap: 10px;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: white;
+    width: 200px;
+    padding: 10px;
+    display: none; /* Ocultarlo inicialmente */
+  }
+
+  .nav-list.show {
+    display: flex; /* Mostrar cuando el usuario haga clic en el ícono del menú */
+  }
+
+  .menu-toggle {
+    display: block; /* Asegúrate de que el ícono se muestre en pantallas pequeñas */
+    cursor: pointer;
+    font-size: 24px;
+    color: #2a3443;
+  }
+}
+
+/* Por defecto, el ícono del menú está oculto en pantallas grandes */
+.menu-toggle {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* Mostrar el ícono en pantallas pequeñas */
+  }
+}

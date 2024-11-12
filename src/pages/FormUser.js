@@ -27,7 +27,7 @@ function FormUser() {
 
     if (!token) {
       alert("No tienes un token. Inicia sesión para continuar.");
-      return; 
+      return;
     }
 
     try {
@@ -43,7 +43,7 @@ function FormUser() {
       if (response.ok) {
         console.log("Usuario creado exitosamente");
         alert("Usuario creado exitosamente");
-        navigate("/manage-users"); 
+        navigate("/manage-users");
       } else {
         const errorData = await response.json();
         console.error("Error al crear el usuario:", errorData);

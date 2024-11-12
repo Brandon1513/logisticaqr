@@ -28,17 +28,14 @@ export const saveQRData = async (formData, qrData, token) => {
 //Funcion para modificar o actualizar los datos del formulario del QR
 export const updateQrData = async (formData, token, navigate) => {
   try {
-    const response = await fetch(
-      `${API_BASE_URL}/qr/update/${formData._id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/qr/update/${formData._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
 
     if (!response.ok) {
       throw new Error("Error actualizando el QR");
@@ -54,29 +51,27 @@ export const updateQrData = async (formData, token, navigate) => {
 
 //Funcion para eliminar los datos en la tabla de activos del QR
 export const deleteQRCode = async (id, token, qrData, setQrData) => {
-    const confirmDelete = window.confirm(
-      "¿Estás seguro de que deseas eliminar este QR?"
-    );
-    if (!confirmDelete) return;
-  
-    try {
-      const response = await fetch(`${API_BASE_URL}/qr/delete/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
-      if (response.ok) {
-        alert("Activo eliminado correctamente");
-        return qrData.filter((item) => item._id !== id);
-      } else {
-        alert("Error al eliminar el Activo");
-      }
-    } catch (error) {
-      console.error("Error eliminando QR:", error);
-      alert("Hubo un error al intentar eliminar el Activo");
-    }
-  };
+  const confirmDelete = window.confirm(
+    "¿Estás seguro de que deseas eliminar este QR?"
+  );
+  if (!confirmDelete) return;
 
-  
+  try {
+    const response = await fetch(`${API_BASE_URL}/qr/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.ok) {
+      alert("Activo eliminado correctamente");
+      return qrData.filter((item) => item._id !== id);
+    } else {
+      alert("Error al eliminar el Activo");
+    }
+  } catch (error) {
+    console.error("Error eliminando QR:", error);
+    alert("Hubo un error al intentar eliminar el Activo");
+  }
+};

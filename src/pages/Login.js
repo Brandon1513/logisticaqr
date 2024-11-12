@@ -3,7 +3,7 @@ import "../assets/styles/Login.css";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../config";
 
-import Logo from "../assets/images/DasavenaLogo.png"
+import Logo from "../assets/images/DasavenaLogo.png";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -27,9 +27,9 @@ function Login() {
       if (response.ok) {
         // Guarda el token y el rol en el localStorage o contexto
         localStorage.setItem("token", data.token);
-        localStorage.setItem("rol", data.rol); 
+        localStorage.setItem("rol", data.rol);
 
-        navigate("/home"); 
+        navigate("/home");
       } else {
         // Manejar errores, como mostrar un mensaje de error
         alert(data.message || "Error al iniciar sesión");
@@ -45,7 +45,7 @@ function Login() {
   return (
     <div className="login-container">
       <div className="login-box">
-        <img src={Logo} className="logo-user"/>
+        <img src={Logo} className="logo-user" />
         <h2 className="login-title">Iniciar Sesión</h2>
         <form onSubmit={handleLogin}>
           <div className="input-container">

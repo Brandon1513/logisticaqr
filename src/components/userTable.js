@@ -22,7 +22,9 @@ function DataTable() {
         setUsers(data);
       } catch (error) {
         console.error("Error:", error);
-        setError("No se pudieron cargar los usuarios. Intenta de nuevo más tarde.");
+        setError(
+          "No se pudieron cargar los usuarios. Intenta de nuevo más tarde."
+        );
       } finally {
         setLoading(false);
       }
@@ -34,9 +36,11 @@ function DataTable() {
   const token = localStorage.getItem("token");
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este usuario?");
+    const confirmDelete = window.confirm(
+      "¿Estás seguro de que deseas eliminar este usuario?"
+    );
     if (!confirmDelete) return;
-  
+
     try {
       const response = await fetch(`${API_BASE_URL}/user/delete/${id}`, {
         method: "DELETE",
@@ -45,7 +49,7 @@ function DataTable() {
           Authorization: `Bearer ${token}`, // Asegúrate de que `token` esté disponible
         },
       });
-  
+
       if (response.ok) {
         // Actualizar la lista de usuarios eliminando el que fue borrado
         setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
@@ -59,7 +63,6 @@ function DataTable() {
       alert("No se pudo eliminar el usuario. Intenta de nuevo más tarde.");
     }
   };
-  
 
   const handleEdit = (user) => {
     navigate("/editProfile", { state: { user } });
@@ -74,41 +77,49 @@ function DataTable() {
   }
 
   return (
-    <table className="user-table">
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Email</th>
-          <th>Rol</th>
-          <th>Departamento</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        {users.length > 0 ? (
-          users.map((user) => (
-            <tr key={user._id}>
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>{user.rol}</td>
-              <td>{user.departamento}</td>
-              <td>
-                <button className="edit-button" onClick={() => handleEdit(user)}>
-                  <FaIcons.FaRegEdit size={15}/>
-                </button>
-                <button className="delete-button" onClick={() => handleDelete(user._id)}>
-                <MdIcons.MdDeleteOutline size={18} />
-                </button>
-              </td>
-            </tr>
-          ))
-        ) : (
+    <div className="table-container">
+      <table className="user-table">
+        <thead>
           <tr>
-            <td colSpan="5">No hay usuarios disponibles.</td>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Departamento</th>
+            <th>Acciones</th>
           </tr>
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user._id}>
+                <td>{user.username}</td>
+                <td>{user.email}</td>
+                <td>{user.rol}</td>
+                <td>{user.departamento}</td>
+                <td>
+                  <button
+                    className="edit-button"
+                    onClick={() => handleEdit(user)}
+                  >
+                    <FaIcons.FaRegEdit size={15} />
+                  </button>
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(user._id)}
+                  >
+                    <MdIcons.MdDeleteOutline size={18} />
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="5">No hay usuarios disponibles.</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

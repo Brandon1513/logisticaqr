@@ -1,79 +1,81 @@
 /* Estilos generales para el formulario */
 .create-user {
-    width: 600px;
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 130px;
+  width: 100%;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
 }
 
 .create-user h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #2a3443;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #2a3443;
 }
 
 .create-user-form .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .create-user-form .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #555;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
 }
 
 .create-user-form .form-group input,
 .create-user-form .form-group select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .create-user-form .form-group input:focus,
 .create-user-form .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 /* Estilos para el botón de enviar */
 .submit-button {
-    display: inline-block;
-    width: 100%;
-    padding: 12px;
-    background-color: #2a3443;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  background-color: #2a3443;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-    background-color: #374151;
+  background-color: #374151;
 }
 
+/* Estilos responsivos */
 @media (max-width: 768px) {
-    .create-user {
-        padding: 15px;
-    }
+  .create-user {
+    /* Reduce el ancho en pantallas más pequeñas */
+    width: 90%;
+    padding: 10px;
+  }
+}
 
-    .create-user h2 {
-        font-size: 20px;
-    }
-
-    .submit-button {
-        font-size: 14px;
-    }
+@media (max-width: 480px) {
+  .create-user {
+    padding: 10px;
+    width: 90%;
+  }
 }

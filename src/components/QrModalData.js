@@ -9,6 +9,8 @@ import {
   sanitariosMap,
   oficinasMap,
 } from "../assets/Ubicaciones";
+import "../assets/styles/activosModal.css";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const QrModalData = ({
   isOpen,
@@ -99,7 +101,7 @@ const QrModalData = ({
             Generar QR
           </button>
           <button className="close-button" onClick={closeModal}>
-            Cerrar
+            <IoIosCloseCircleOutline size={40} />
           </button>
         </div>
 

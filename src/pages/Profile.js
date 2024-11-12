@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "../config";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../assets/styles/editProfile.css";
-import UserIcon from "../assets/images/icons/UserProfile.png"
+import UserIcon from "../assets/images/icons/UserProfile.png";
 
 function Profile() {
   const location = useLocation();
@@ -17,7 +17,7 @@ function Profile() {
       const storedRole = localStorage.getItem("rol");
       setRole(storedRole);
     }
-  }, [location]); 
+  }, [location]);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -55,12 +55,11 @@ function Profile() {
       }
     };
 
-    
     if (token) {
       fetchUserData();
     } else {
       alert("Por favor inicia sesión.");
-      navigate("/login"); 
+      navigate("/login");
     }
   }, [token, navigate]);
 
@@ -76,10 +75,10 @@ function Profile() {
 
     const updatedData = { ...formData };
     if (!updatedData.password) {
-      delete updatedData.password; 
+      delete updatedData.password;
     }
 
-    console.log("Datos que se envían:", updatedData); 
+    console.log("Datos que se envían:", updatedData);
 
     try {
       const response = await fetch(`${API_BASE_URL}/user/update-profile`, {
@@ -88,7 +87,7 @@ function Profile() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(updatedData), 
+        body: JSON.stringify(updatedData),
       });
 
       if (response.ok) {
@@ -107,7 +106,7 @@ function Profile() {
 
   return (
     <div className="edit-user">
-      <img src={UserIcon} className="UserIcon"/>
+      <img src={UserIcon} className="UserIcon" />
       <form onSubmit={handleUpdateProfile} className="edit-user-form">
         <div className="form-group">
           <label htmlFor="username">Nombre</label>

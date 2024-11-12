@@ -1,86 +1,113 @@
 /* Estilos generales para el formulario */
 .edit-user {
-    width: 600px;
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-top: 130px;
+  width: 100%;
+  max-width: 500px; /* Ajuste el ancho máximo para pantallas grandes */
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
 }
 
 .edit-user h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #2a3443;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #2a3443;
 }
 
 .edit-user-form .form-group {
-    margin-bottom: 15px;
+  margin-bottom: 15px;
 }
 
 .edit-user-form .form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 14px;
-    color: #555;
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
 }
 
 .edit-user-form .form-group input,
 .edit-user-form .form-group select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-sizing: border-box;
 }
 
 .edit-user-form .form-group input:focus,
 .edit-user-form .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
 .submit-button-Update {
-    display: inline-block;
-    width: 100%;
-    padding: 12px;
-    background-color: #2a3443;
-    color: #fff;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  display: inline-block;
+  width: 100%;
+  padding: 12px;
+  background-color: #2a3443;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .submit-button-Update:hover {
-    background-color: #374151;
+  background-color: #374151;
 }
 
 .UserIcon {
-    display: block;
-    margin: 0 auto; 
-    width: 120px; 
-    height: auto;
+  display: block;
+  margin: 0 auto;
+  width: 120px;
+  height: auto;
+}
+
+/* Media queries para pantallas pequeñas (móviles) */
+@media (max-width: 768px) {
+  .edit-user {
+    padding: 15px;
+    margin-top: 100px;
   }
 
+  .edit-user-form .form-group label {
+    font-size: 12px; /* Reducir el tamaño de la fuente en móviles */
+  }
 
-@media (max-width: 768px) {
-    .edit-user {
-        padding: 15px;
-    }
+  .edit-user-form .form-group input,
+  .edit-user-form .form-group select {
+    padding: 8px;
+    font-size: 14px; /* Reducir el tamaño del input para móviles */
+  }
 
-    .edit-user h2 {
-        font-size: 20px;
-    }
+  .submit-button-Update {
+    padding: 10px;
+    font-size: 14px;
+  }
+}
 
-    .submit-button {
-        font-size: 14px;
-    }
+/* Media queries para pantallas medianas (tablets) */
+@media (max-width: 1024px) {
+  .edit-user {
+    width: 90%; /* Ajustar el ancho para tablets */
+    margin-top: 120px;
+  }
+
+  .edit-user-form .form-group input,
+  .edit-user-form .form-group select {
+    padding: 9px;
+    font-size: 15px; /* Ajustar el tamaño de los inputs para tablets */
+  }
+
+  .submit-button-Update {
+    padding: 11px;
+    font-size: 15px;
+  }
 }

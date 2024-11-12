@@ -1,0 +1,203 @@
+/* Estilos generales del modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Título del modal */
+.modal-content h3 {
+  font-size: 1.8rem;
+  color: #2a3443;
+  text-align: center;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
+
+/* Cerrar el modal */
+.close-button {
+  position: absolute;
+  top: -1px;
+  right: 35px;
+  background-color: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: #f44336;
+  cursor: pointer;
+  max-width: 40px;
+}
+
+.close-button:hover {
+  color: #d32f2f;
+}
+
+/* Detalles del contenido del modal */
+.modal-content p {
+  font-size: 1rem;
+  color: #555;
+  margin: 8px 0;
+}
+
+.modal-content strong {
+  color: #333;
+}
+
+/* Botones del modal */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 45%;
+}
+
+.modal-buttons .generate-qr-button {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.modal-buttons .generate-qr-button:hover {
+  background-color: #43a047;
+}
+
+.modal-buttons .close-button-action {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.modal-buttons .close-button-action:hover {
+  background-color: #e53935;
+}
+
+/* Código QR */
+.qr-code {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.qr-code canvas {
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+/* Botón exportar QR */
+.export-qr {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.export-button {
+  background-color: #ff9800;
+  color: white;
+  padding: 11px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+}
+
+.export-button:hover {
+  background-color: #e68900;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+    margin: 15px;
+  }
+
+  .modal-buttons button {
+    padding: 10px;
+    width: 48%;
+  }
+
+  .qr-code canvas {
+    width: 200px !important;
+    height: 200px !important;
+  }
+
+  .export-button {
+    padding: 10px;
+  }
+  .close-button {
+    position: absolute;
+    top: -5px;
+    right: 20px;
+  }
+}
+
+@media (max-width: 490px) {
+  .modal-content {
+    padding: 10px;
+    margin: 15px;
+  }
+
+  .modal-buttons button {
+    padding: 8px;
+  }
+
+  .modal-buttons .generate-qr-button {
+    width: 65%;
+  }
+  .export-button {
+    width: 65%;
+  }
+
+  .qr-code canvas {
+    width: 200px !important;
+    height: 200px !important;
+  }
+  .close-button {
+    position: absolute;
+    top: 5px;
+    right: 20px;
+  }
+}

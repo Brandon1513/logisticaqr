@@ -1,24 +1,15 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: Arial, sans-serif;
-  background-color: #f3f3f3;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100vh;
+  background-color: #f2f2f2;
 }
 
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  margin-top: 25%;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  padding: 1rem;
+  background-color: #f0f2f5; /* Fondo para mayor visibilidad */
 }
 
 .login-box {
@@ -26,7 +17,9 @@ body {
   padding: 2rem;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 400px;
+  width: 100%;
+  max-width: 400px; /* Límite de tamaño para pantallas grandes */
+  box-sizing: border-box;
 }
 
 .login-title {
@@ -47,10 +40,10 @@ body {
 }
 
 .input-container input {
-  width: 100%;
+  width: 92%;
   padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1rem;
 }
 
@@ -65,7 +58,7 @@ body {
   background-color: #2a3443;
   color: #fff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1rem;
   cursor: pointer;
 }
@@ -75,9 +68,33 @@ body {
 }
 
 .logo-user {
-  display: block; 
-  margin: 0 auto 1.5rem auto; 
-  width: 150px; 
+  display: block;
+  margin: 0 auto 1.5rem auto;
+  width: 40%; /* Tamaño flexible para pantallas pequeñas */
   height: auto;
 }
 
+/* Media queries para pantallas pequeñas */
+@media (max-width: 480px) {
+  .login-box {
+    padding: 1.5rem;
+  }
+
+  .login-title {
+    font-size: 1.5rem;
+  }
+
+  .input-container input {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  .login-button {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .logo-user {
+    width: 50%;
+  }
+}

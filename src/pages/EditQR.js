@@ -46,10 +46,10 @@ const EditQrForm = () => {
   };
 
   //Guarda los cambios realizados en el formulario
-  const handleUpdateQR = async (e) =>{
+  const handleUpdateQR = async (e) => {
     e.preventDefault();
-    await updateQrData(formData, token, navigate)
-  }
+    await updateQrData(formData, token, navigate);
+  };
 
   return (
     <div className="form-container">
