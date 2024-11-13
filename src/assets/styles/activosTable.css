@@ -185,6 +185,54 @@
   height: auto;
 }
 
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+}
+
+input[type="checkbox"] {
+  display: none; /* Oculta el checkbox por defecto */
+}
+
+.custom-checkbox {
+  width: 30px;
+  height: 30px;
+  background-color: #e2e8f0; /* Gris claro */
+  border-radius: 6px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo cuando el checkbox está seleccionado */
+input[type="checkbox"]:checked + .custom-checkbox {
+  background-color: #34d399; /* Verde claro */
+}
+
+/* El icono de checkmark que aparece cuando está seleccionado */
+.custom-checkbox::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 6px;
+  border-left: 3px solid white;
+  border-bottom: 3px solid white;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Muestra el icono de checkmark cuando el checkbox está marcado */
+input[type="checkbox"]:checked + .custom-checkbox::before {
+  opacity: 1;
+}
+
+
 /* Estilos para pantallas pequeñas (móviles) */
 @media (max-width: 768px) {
   .search-bar {
@@ -216,6 +264,23 @@
   .pagination-controls button {
     margin-bottom: 10px;
   }
+  .checkbox-container {
+    padding: 0 8px; /* Reduce el relleno para pantallas pequeñas */
+  }
+
+  .custom-checkbox {
+    width: 25px; /* Reduce el tamaño del checkbox en pantallas pequeñas */
+    height: 25px;
+  }
+
+  .custom-checkbox::before {
+    width: 10px; /* Hace el icono del checkmark más pequeño */
+    height: 5px;
+  }
+
+  input[type="checkbox"]:checked + .custom-checkbox {
+    background-color: #34d399; /* Color verde claro */
+  }
 }
 
 /* Estilos para pantallas grandes */
@@ -235,5 +300,18 @@
 
   .export-buttons button {
     padding: 10px 20px;
+  }
+  .checkbox-container {
+    padding: 0 15px; /* Añade más relleno en pantallas grandes */
+  }
+
+  .custom-checkbox {
+    width: 30px; /* Tamaño estándar del checkbox */
+    height: 30px;
+  }
+
+  .custom-checkbox::before {
+    width: 12px; /* Tamaño estándar para el checkmark */
+    height: 6px;
   }
 }

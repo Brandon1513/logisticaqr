@@ -98,6 +98,39 @@ const ActivosTable = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleCheckboxChange = async (item) => {
+    const updatedImpreso = !item.impreso; // Alterna el estado de "impreso"
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/qr/update-checkbox/${item._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ impreso: updatedImpreso }), // Envía el nuevo valor de "impreso"
+        }
+      );
+
+      if (response.ok) {
+        const updatedItem = await response.json();
+
+        // Actualiza el estado local de qrData para reflejar el cambio en el frontend
+        setQrData((prevData) =>
+          prevData.map((qrItem) =>
+            qrItem._id === item._id ? updatedItem : qrItem
+          )
+        );
+      } else {
+        console.error("Error al actualizar el estado de impreso");
+      }
+    } catch (error) {
+      console.error("Error al enviar la solicitud:", error);
+    }
+  };
+
   //Creación de objeto de datos filtrados para su exportación
   const filteredData = qrData.filter(
     (item) =>
@@ -177,6 +210,7 @@ const ActivosTable = () => {
               <th>Tipo</th>
               <th>Ubicación</th>
               <th>Estado</th>
+              <th>Impreso</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -189,6 +223,20 @@ const ActivosTable = () => {
                 <td>{tipoMap[item.tipo] || item.tipo}</td>
                 <td>{ubicacionesMap[item.ubicacion] || item.ubicacion}</td>
                 <td>{item.estado}</td>
+                <td>
+                  <div className="checkbox-container">
+                    <input
+                      type="checkbox"
+                      id={`checkbox-${item._id}`}
+                      checked={item.impreso}
+                      onChange={() => handleCheckboxChange(item)}
+                    />
+                    <label
+                      htmlFor={`checkbox-${item._id}`}
+                      className="custom-checkbox"
+                    ></label>
+                  </div>
+                </td>
                 <td>
                   <button
                     className="view-button"

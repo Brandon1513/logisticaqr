@@ -17,7 +17,10 @@ import {
 } from "../assets/Ubicaciones";
 import DasavenaLogo from "../assets/images/DasavenaLogo.png";
 import QRIcon from "../assets/images/icons/QRIcon.gif";
-import { generateQrString, downloadQR } from "../utils/qrFunctions/exportQrFunction";
+import {
+  generateQrString,
+  downloadQR,
+} from "../utils/qrFunctions/exportQrFunction";
 import { saveQRData } from "../utils/qrFunctions/qrUtils";
 
 function QRForm() {
@@ -39,8 +42,9 @@ function QRForm() {
     ubicacionAlma: "",
     ubicacionSanita: "",
     ubicacionOfi: "",
+    impreso: false,
   });
-  
+
   //Función que controla los cambios del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,12 +56,12 @@ function QRForm() {
     e.preventDefault();
     const qrContent = generateQrString(formData);
     setQrData(qrContent);
-  }
+  };
 
   //Guardar el formulario dentro de la base de datos
   const handleSaveQr = () => {
     saveQRData(formData, qrData, token);
-  }
+  };
 
   //Descarga el QR con el diseño
   const handleDownloadQr = (qrRef, modalData) => {
@@ -83,6 +87,7 @@ function QRForm() {
       ubicacionAlma: "",
       ubicacionSanita: "",
       ubicacionOfi: "",
+      impreso: false,
     });
     setQrData("");
   };
@@ -348,11 +353,21 @@ function QRForm() {
           </div>
 
           <div className="save-group">
-            <button className="export-button-form" onClick={() => handleDownloadQr(qrRef,formData)}>
+            <button
+              className="export-button-form"
+              onClick={() => handleDownloadQr(qrRef, formData)}
+            >
               Exportar QR como PNG
             </button>
 
-            <button type="button" className="save-button" onClick={() => {handleSaveQr(); handleClear() }}>
+            <button
+              type="button"
+              className="save-button"
+              onClick={() => {
+                handleSaveQr();
+                handleClear();
+              }}
+            >
               Guardar
             </button>
           </div>
