@@ -9,6 +9,7 @@ import {
 
 export const generateQrString = (qrData, e) => {
   const qrContent = [
+    `F-ADM-01`,
     `Nombre - ${qrData.nombre.toString()}`,
     `No. de Serie - ${qrData.noSerie.toString()}`,
     `Proveedor - ${qrData.proveedor.toString()}`,
@@ -75,7 +76,7 @@ export const downloadQR = (qrRef, qrModalData) => {
   ctx.drawImage(canvas, qrXPosition, qrYPosition);
 
   // Texto de la referencia en la parte inferior
-  const reference = "F-ADM-01";
+  const reference = qrModalData.nombre;
   ctx.font = "20px Arial"; // Referencia con 20px
   ctx.fillText(reference, exportWidth / 2, exportHeight - 20); // Posiciona la referencia en el centro abajo
 
