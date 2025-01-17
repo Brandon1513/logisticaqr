@@ -103,6 +103,7 @@ const EditQrForm = () => {
           >
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
+            <option value="Desecho">Desecho</option>
           </select>
         </div>
 
